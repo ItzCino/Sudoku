@@ -1,5 +1,8 @@
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -34,6 +37,24 @@ public class MyFrame extends JFrame implements ActionListener{
     button.addActionListener(this);
 
     textField = new JTextField();
+
+    textField.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e) {
+        printInput();
+      }
+  
+      @Override
+      public void removeUpdate(DocumentEvent e) {
+        printInput();
+      }
+  
+      @Override
+      public void changedUpdate(DocumentEvent e) {
+        printInput();
+      }
+    });
+
     textField.addActionListener(this);
     textField.setPreferredSize(new Dimension(250, 40));
     textField.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -52,6 +73,10 @@ public class MyFrame extends JFrame implements ActionListener{
         String text = textField.getText();
         System.out.println("hello! "+ text);
     }
+  }
+
+  public void printInput() {
+    System.out.println(textField.getText());
   }
 }
  
