@@ -29,6 +29,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   // creates a 3x3 cluster of pannels
   JPanel[][] panels = new JPanel[boxSize][boxSize];
   int[][] sudokuData = new int[noOfRows][noOfColumns];
+  ArrayList<ArrayList<Sudoku>> data = new ArrayList<ArrayList<Sudoku>>();
 
   public MyFrame() {
     this.setTitle("Susdoku");  // sets title of window
@@ -39,13 +40,17 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
 
     // mainPanel.setLocation(100, 250);
     
-
+    int boxCounter = 0;
     for (int row = 0; row < boxSize; row++) {
+
       for (int col = 0; col < boxSize; col++) {
+        System.out.println(boxCounter);
+        data.add(new ArrayList<Sudoku>());
         JPanel panel = new JPanel(new GridLayout(boxSize, boxSize, 1, 1));
         // JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.BLACK);
         panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        int innerCounter = 0;
         for (int i = 0; i < boxSize; i++) {
           for (int j = 0; j < boxSize; j++) {
             JPanel panelTemplate = new JPanel();
@@ -54,9 +59,13 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
             text.getDocument().addDocumentListener(this);
             panelTemplate.add(text);
             panel.add(panelTemplate);
+            data.get(boxCounter).add(innerCounter, new Sudoku(row, col, i, j, innerCounter)); 
+            // System.out.println(innerCounter);
+            innerCounter++;
           }
         }
         mainPanel.add(panel);
+        boxCounter++;
       }
     }
 
@@ -77,7 +86,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     this.setVisible(true); // makes window visible
   }
 
-  public JTextField createTextField() {
+public JTextField createTextField() {
     JTextField text = new JTextField();
     text.setPreferredSize(new Dimension(80, 80));
     text.setFont(new Font("Arial", Font.PLAIN, 30));
@@ -89,11 +98,16 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   
   // displays stored text
   public void printInput() {
+    System.out.println(data.size());
+    for (int i=0; i<data.size(); i++) {
+      System.out.println(i+":"+data.get(i).size());
+    }
+
     // System.out.println("============");
     // for (int i=0;i<noOfRows;i++) {
     //   System.out.println(i + " : " + textFields.get(i).getLocation(getLocation()) + " : " +textFields.get(i).getText());
     // }
-  }
+    }
 
   @Override
   public void actionPerformed(ActionEvent e) {
