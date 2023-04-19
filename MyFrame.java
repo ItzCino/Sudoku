@@ -59,7 +59,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
             text.getDocument().addDocumentListener(this);
             panelTemplate.add(text);
             panel.add(panelTemplate);
-            data.get(boxCounter).add(innerCounter, new Sudoku(row, col, i, j, innerCounter)); 
+            data.get(boxCounter).add(innerCounter, new Sudoku(row, col, i, j, boxCounter, innerCounter, text)); 
             // System.out.println(innerCounter);
             innerCounter++;
           }
@@ -86,7 +86,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     this.setVisible(true); // makes window visible
   }
 
-public JTextField createTextField() {
+  public JTextField createTextField() {
     JTextField text = new JTextField();
     text.setPreferredSize(new Dimension(80, 80));
     text.setFont(new Font("Arial", Font.PLAIN, 30));
@@ -98,16 +98,31 @@ public JTextField createTextField() {
   
   // displays stored text
   public void printInput() {
-    System.out.println(data.size());
+    System.out.println("\nEACH ROW REPRESENTS EACH BOX");
+    // System.out.println(data.size());
     for (int i=0; i<data.size(); i++) {
-      System.out.println(i+":"+data.get(i).size());
+      System.out.println();
+      System.out.print(i+":");
+      for (int j = 0; j < data.size(); j++) {
+        System.out.print(data.get(i).get(j).getValue());
+      }
     }
 
     // System.out.println("============");
     // for (int i=0;i<noOfRows;i++) {
     //   System.out.println(i + " : " + textFields.get(i).getLocation(getLocation()) + " : " +textFields.get(i).getText());
     // }
+  }
+
+  public void updateData() {
+    for (int i=0; i<data.size(); i++) {
+      for (int j = 0; j < data.size(); j++) {
+        data.get(i).get(j).getValue();
+      }
     }
+    printInput();
+    // printInput();
+  }
 
   @Override
   public void actionPerformed(ActionEvent e) {
@@ -117,19 +132,18 @@ public JTextField createTextField() {
   }
 
   @Override
-  public void insertUpdate(DocumentEvent e) {
-    printInput();
+  public void insertUpdate(DocumentEvent e) {   
+    updateData();
   }
 
   @Override
     public void removeUpdate(DocumentEvent e) {
-    printInput();
+    updateData();
   }
 
   @Override
   public void changedUpdate(DocumentEvent e) {
-    // printInput();
-    return;
+    updateData();
   }
 }
  
