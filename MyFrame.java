@@ -134,12 +134,26 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
       duplicates =  Sudoku.checkOuterBox(data.get(i), i);
       // duplicates.get(0).add(0,i);
       System.out.println(duplicates);
+      setTextFieldColor(duplicates);
     }
   }
 
   public void setTextFieldColor(ArrayList<ArrayList<Integer>> redBoxes) {
-    
+    for (int outerBox = 0; outerBox < redBoxes.size(); outerBox++) {
+      int boxOut = redBoxes.get(outerBox).get(0);
+      int boxIn = redBoxes.get(outerBox).get(1);
+      data.get(boxOut).get(boxIn).setRedField();
+    }
   }
+
+  public void resetAllTextFields() {
+    for (int outerBox = 0; outerBox < data.size(); outerBox++) {
+      for (int innerBox = 0; innerBox < data.size(); innerBox++) {
+        data.get(outerBox).get(innerBox).setWhiteField();
+      }
+    }
+  }
+  
 
   @Override
   public void actionPerformed(ActionEvent e) {
