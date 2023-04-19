@@ -36,7 +36,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // exits program when window is closed
     this.setResizable(false);  // prevents window from being resized
     this.setSize(750, 750);
-    this.setLocation(300, 300);
+    this.setLocation(800, 200);
 
     // mainPanel.setLocation(100, 250);
     
@@ -44,7 +44,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     for (int row = 0; row < boxSize; row++) {
 
       for (int col = 0; col < boxSize; col++) {
-        System.out.println(boxCounter);
+        // System.out.println(boxCounter);
         data.add(new ArrayList<Sudoku>());
         JPanel panel = new JPanel(new GridLayout(boxSize, boxSize, 1, 1));
         // JPanel panel = new JPanel(new BorderLayout());
@@ -87,7 +87,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   }
 
   public JTextField createTextField() {
-    JTextField text = new JTextField();
+    JTextField text = new JTextField("");
     text.setPreferredSize(new Dimension(80, 80));
     text.setFont(new Font("Arial", Font.PLAIN, 30));
     text.setHorizontalAlignment(JTextField.CENTER);
@@ -120,8 +120,25 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
         data.get(i).get(j).getValue();
       }
     }
+    checkAllOuterBoxes();
+
     printInput();
     // printInput();
+  }
+
+  public void checkAllOuterBoxes() {
+    System.out.println();
+    for (int i=0; i<data.size(); i++) {
+    //   System.out.println("OUTER BOX: " + i);
+      ArrayList<ArrayList<Integer>> duplicates;
+      duplicates =  Sudoku.checkOuterBox(data.get(i), i);
+      // duplicates.get(0).add(0,i);
+      System.out.println(duplicates);
+    }
+  }
+
+  public void setTextFieldColor(ArrayList<ArrayList<Integer>> redBoxes) {
+    
   }
 
   @Override
@@ -143,7 +160,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
 
   @Override
   public void changedUpdate(DocumentEvent e) {
-    updateData();
+    // updateData();
   }
 }
  

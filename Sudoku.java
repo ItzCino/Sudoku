@@ -1,9 +1,15 @@
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import javax.swing.JTextField;
 
 public class Sudoku {
-  JTextField textField;
+  private static final String NullPointerException = null;
+
+JTextField textField;
     
-  String value;
+  String value = "";
   int row;
   int column;
   int innerRow;
@@ -28,13 +34,72 @@ public class Sudoku {
   }
 
   public void setValue() {
-    
     this.value = this.textField.getText();
     // System.out.println("::" + this.value);
   }
 
   public String getValue() {
-    setValue();
-    return this.value;
+    String thisValue = this.textField.getText();
+    // if (this.textField.getText().equals("")) {
+    //   System.out.println("SDASDADASF");
+    // }
+    return thisValue;
   }
+
+  public String getInnerBoxIDStr() {
+      return Integer.toString(this.innerBoxID);
+  }
+
+  public String getOuterBoxIDStr() {
+    return Integer.toString(this.outerBoxID);
+  }
+
+  public int getInnerBoxIDInt() {
+      return this.innerBoxID;
+  }
+
+  public int getOuterBoxIDInt() {
+      return this.outerBoxID;
+  }
+
+  public void setRedField() {
+    this.textField.setBackground(Color.RED);
+  }
+
+  public void setWhiteField() {
+      this.textField.setBackground(Color.WHITE);
+  }
+
+  public static ArrayList<ArrayList<Integer>> checkOuterBox(ArrayList<Sudoku> outerBox, int outerBoxNumber) {
+    // creates a 2D array list to store duplicates
+    ArrayList<ArrayList<Integer>> duplicateArray = new ArrayList<ArrayList<Integer>>();
+    int duplicateCounter = 0;
+    // * NOTE try to convert from string to int *
+    for (int innerBox=0; innerBox<outerBox.size(); innerBox++) {
+      // get the value of the current box
+      String currentInnerBox = outerBox.get(innerBox).getValue();
+    //   System.out.println("BOX: "+innerBox);
+    //   System.out.println("CONTENTS: " + currentInnerBox);
+      // check if the value is a duplicate
+      int occurrences = 0;
+      for (int innerBoxBox = 0; innerBoxBox < outerBox.size(); innerBoxBox++) {
+        int innerID = outerBox.get(innerBox).getInnerBoxIDInt();
+        int outerID = outerBox.get(innerBox).getOuterBoxIDInt();
+        if ((outerBoxNumber == (outerID)) && (innerBoxBox == (innerID))) {
+          continue;
+        }
+        String currentValue = outerBox.get(innerBoxBox).getValue();
+        if ((currentInnerBox.equals(currentValue)) && (currentValue.equals("") == false)) {
+          occurrences++;
+        //   ArrayList<Integer> tempArray = new ArrayList<Integer>(Arrays.asList(3, 4, 6));
+        //   tempArray.add(outerBoxNumber);
+        //   tempArray.add(innerBox);
+          duplicateArray.add(new ArrayList<>(Arrays.asList(outerBoxNumber, innerBox)));
+          duplicateCounter++;
+      } 
+    //   System.out.println("OCCUR: " + occurrences);
+      }
+    }
+    return duplicateArray;
+  }    
 }
