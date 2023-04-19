@@ -29,6 +29,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   // creates a 3x3 cluster of pannels
   JPanel[][] panels = new JPanel[boxSize][boxSize];
   int[][] sudokuData = new int[noOfRows][noOfColumns];
+  ArrayList<ArrayList<Integer>> duplicateValues = new ArrayList<ArrayList<Integer>>();
   ArrayList<ArrayList<Sudoku>> data = new ArrayList<ArrayList<Sudoku>>();
 
   public MyFrame() {
@@ -134,16 +135,29 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
       duplicates =  Sudoku.checkOuterBox(data.get(i), i);
       // duplicates.get(0).add(0,i);
       System.out.println(duplicates);
-      setTextFieldColor(duplicates);
+      setTextFieldColor(duplicates, i);
     }
   }
 
-  public void setTextFieldColor(ArrayList<ArrayList<Integer>> redBoxes) {
-    for (int outerBox = 0; outerBox < redBoxes.size(); outerBox++) {
-      int boxOut = redBoxes.get(outerBox).get(0);
-      int boxIn = redBoxes.get(outerBox).get(1);
-      data.get(boxOut).get(boxIn).setRedField();
+  public void setTextFieldColor(ArrayList<ArrayList<Integer>> redBoxes, int outerBox) {
+    if (redBoxes.size() == 0) {
+      resetBoxFields(outerBox);
+      return;
     }
+    resetBoxFields(outerBox);
+    for (int innerRedBox = 0; innerRedBox < redBoxes.size(); innerRedBox++) {
+      for (int innerBox = 0; innerBox < data.size(); innerBox++) {
+        if (redBoxes.get(innerRedBox).get(1) == innerBox) {
+          data.get(outerBox).get(innerBox).setRedField();
+          break;
+        } 
+      }
+    }
+    // for (int outerBox = 0; outerBox < redBoxes.size(); outerBox++) {
+    //   int boxOut = redBoxes.get(outerBox).get(0);
+    //   int boxIn = redBoxes.get(outerBox).get(1);
+    //   data.get(boxOut).get(boxIn).setRedField();
+    // }
   }
 
   public void resetAllTextFields() {
@@ -151,6 +165,12 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
       for (int innerBox = 0; innerBox < data.size(); innerBox++) {
         data.get(outerBox).get(innerBox).setWhiteField();
       }
+    }
+  }
+
+  public void resetBoxFields(int outerBox) {
+    for (int innerBox = 0; innerBox < data.size(); innerBox++) {
+      data.get(outerBox).get(innerBox).setWhiteField();
     }
   }
   
