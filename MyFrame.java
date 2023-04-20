@@ -117,6 +117,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   }
 
   public void updateData() {
+    System.out.println("======NEW DATA================");
     duplicateValues = createDuplicateValuesArray();
     for (int i=0; i<data.size(); i++) {
       for (int j = 0; j < data.size(); j++) {
@@ -125,7 +126,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     }
     checkAllOuterBoxes();
     System.out.println("DUPSSS: \n"+duplicateValues+"\n");
-    // updateFieldColour();
+    updateFieldColour();
 
     printInput();
     // printInput();
@@ -135,13 +136,10 @@ public void checkAllOuterBoxes() {
     System.out.println();
     for (int i=0; i<data.size(); i++) {
     //   System.out.println("OUTER BOX: " + i);
-      ArrayList<ArrayList<Integer>> duplicates;
+      ArrayList<Integer> duplicates;
       duplicates =  Sudoku.checkOuterBox(data.get(i), i);
       System.out.println("BOX "+i+":\n" + duplicates + "\n");
       addDuplicates(duplicates, i);
-      // duplicates.get(0).add(0,i);
-    //   System.out.println(duplicates);
-    //   setTextFieldColor(duplicates, i);
     }
   }
 
@@ -151,10 +149,11 @@ public void checkAllOuterBoxes() {
     }
   }
 
-  public void addDuplicates(ArrayList<ArrayList<Integer>> duplicates, int outerBox) {
-    for (int i=0; i<duplicates.size(); i++) {
-      duplicateValues.add(outerBox, duplicates.get(i));
-    }
+  public void addDuplicates(ArrayList<Integer> duplicates, int outerBox) {
+    // for (int i=0; i<duplicates.size(); i++) {
+    //   duplicateValues.add(outerBox, duplicates);
+    // }
+    duplicateValues.set(outerBox, duplicates);
   }
   
   // **ONLY** updates each OUTER BOX, ONE at a time.

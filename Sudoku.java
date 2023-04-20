@@ -70,9 +70,9 @@ JTextField textField;
       this.textField.setBackground(Color.WHITE);
   }
 
-  public static ArrayList<ArrayList<Integer>> checkOuterBox(ArrayList<Sudoku> outerBox, int outerBoxNumber) {
+  public static ArrayList<Integer> checkOuterBox(ArrayList<Sudoku> outerBox, int outerBoxNumber) {
     // creates a 2D array list to store duplicates
-    ArrayList<ArrayList<Integer>> duplicateArray = new ArrayList<ArrayList<Integer>>();
+    ArrayList<Integer> duplicateArray = new ArrayList<Integer>();
     // * NOTE try to convert from string to int *
     for (int innerBox=0; innerBox<outerBox.size(); innerBox++) {
       // get the value of the current box
@@ -86,7 +86,10 @@ JTextField textField;
         }
         String currentValue = outerBox.get(innerBoxBox).getValue();
         if ((currentInnerBox.equals(currentValue)) && (currentValue.equals("") == false)) {
-          duplicateArray.add(new ArrayList<>(Arrays.asList(outerBoxNumber, innerBox)));
+          // this condition prevents duplicate "red fields" from being added to the array 
+          if (duplicateArray.contains(innerBoxBox) == false) {
+            duplicateArray.add(innerBoxBox);
+          }
         } 
       }
     }
