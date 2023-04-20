@@ -73,15 +73,11 @@ JTextField textField;
   public static ArrayList<ArrayList<Integer>> checkOuterBox(ArrayList<Sudoku> outerBox, int outerBoxNumber) {
     // creates a 2D array list to store duplicates
     ArrayList<ArrayList<Integer>> duplicateArray = new ArrayList<ArrayList<Integer>>();
-    int duplicateCounter = 0;
     // * NOTE try to convert from string to int *
     for (int innerBox=0; innerBox<outerBox.size(); innerBox++) {
       // get the value of the current box
       String currentInnerBox = outerBox.get(innerBox).getValue();
-    //   System.out.println("BOX: "+innerBox);
-    //   System.out.println("CONTENTS: " + currentInnerBox);
       // check if the value is a duplicate
-      int occurrences = 0;
       for (int innerBoxBox = 0; innerBoxBox < outerBox.size(); innerBoxBox++) {
         int innerID = outerBox.get(innerBox).getInnerBoxIDInt();
         int outerID = outerBox.get(innerBox).getOuterBoxIDInt();
@@ -90,14 +86,8 @@ JTextField textField;
         }
         String currentValue = outerBox.get(innerBoxBox).getValue();
         if ((currentInnerBox.equals(currentValue)) && (currentValue.equals("") == false)) {
-          occurrences++;
-        //   ArrayList<Integer> tempArray = new ArrayList<Integer>(Arrays.asList(3, 4, 6));
-        //   tempArray.add(outerBoxNumber);
-        //   tempArray.add(innerBox);
           duplicateArray.add(new ArrayList<>(Arrays.asList(outerBoxNumber, innerBox)));
-          duplicateCounter++;
-      } 
-    //   System.out.println("OCCUR: " + occurrences);
+        } 
       }
     }
     return duplicateArray;

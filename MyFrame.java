@@ -29,8 +29,9 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   // creates a 3x3 cluster of pannels
   JPanel[][] panels = new JPanel[boxSize][boxSize];
   int[][] sudokuData = new int[noOfRows][noOfColumns];
-  ArrayList<ArrayList<Integer>> duplicateValues = new ArrayList<ArrayList<Integer>>();
   ArrayList<ArrayList<Sudoku>> data = new ArrayList<ArrayList<Sudoku>>();
+  // EACH ROW REPRESENTS EACH OUTER BOX
+  ArrayList<ArrayList<Integer>> duplicateValues = createDuplicateValuesArray();
 
   public MyFrame() {
     this.setTitle("Susdoku");  // sets title of window
@@ -116,48 +117,63 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   }
 
   public void updateData() {
+    duplicateValues = createDuplicateValuesArray();
     for (int i=0; i<data.size(); i++) {
       for (int j = 0; j < data.size(); j++) {
         data.get(i).get(j).getValue();
       }
     }
     checkAllOuterBoxes();
+    System.out.println("DUPSSS: \n"+duplicateValues+"\n");
+    // updateFieldColour();
 
     printInput();
     // printInput();
   }
 
-  public void checkAllOuterBoxes() {
+public void checkAllOuterBoxes() {
     System.out.println();
     for (int i=0; i<data.size(); i++) {
     //   System.out.println("OUTER BOX: " + i);
       ArrayList<ArrayList<Integer>> duplicates;
       duplicates =  Sudoku.checkOuterBox(data.get(i), i);
+      System.out.println("BOX "+i+":\n" + duplicates + "\n");
+      addDuplicates(duplicates, i);
       // duplicates.get(0).add(0,i);
-      System.out.println(duplicates);
-      setTextFieldColor(duplicates, i);
+    //   System.out.println(duplicates);
+    //   setTextFieldColor(duplicates, i);
     }
   }
 
-  public void setTextFieldColor(ArrayList<ArrayList<Integer>> redBoxes, int outerBox) {
+  public void checkAllHorizontalRows() {
+    for (int i=0; i<data.size(); i++) {
+      
+    }
+  }
+
+  public void addDuplicates(ArrayList<ArrayList<Integer>> duplicates, int outerBox) {
+    for (int i=0; i<duplicates.size(); i++) {
+      duplicateValues.add(outerBox, duplicates.get(i));
+    }
+  }
+  
+  // **ONLY** updates each OUTER BOX, ONE at a time.
+  public void setTextFieldColor(ArrayList<Integer> redBoxes, int outerBox) {
+    // resets the color of the text field to white, even if there are no duplicates.
     if (redBoxes.size() == 0) {
       resetBoxFields(outerBox);
       return;
     }
+    // sets all duplicate fields to red
     resetBoxFields(outerBox);
     for (int innerRedBox = 0; innerRedBox < redBoxes.size(); innerRedBox++) {
       for (int innerBox = 0; innerBox < data.size(); innerBox++) {
-        if (redBoxes.get(innerRedBox).get(1) == innerBox) {
+        if (redBoxes.get(innerRedBox) == innerBox) {
           data.get(outerBox).get(innerBox).setRedField();
           break;
         } 
       }
     }
-    // for (int outerBox = 0; outerBox < redBoxes.size(); outerBox++) {
-    //   int boxOut = redBoxes.get(outerBox).get(0);
-    //   int boxIn = redBoxes.get(outerBox).get(1);
-    //   data.get(boxOut).get(boxIn).setRedField();
-    // }
   }
 
   public void resetAllTextFields() {
@@ -173,6 +189,25 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
       data.get(outerBox).get(innerBox).setWhiteField();
     }
   }
+
+  public ArrayList<ArrayList<Integer>> createDuplicateValuesArray() {
+    ArrayList<ArrayList<Integer>> duplicateArray;
+    duplicateArray = new ArrayList<ArrayList<Integer>>();
+    for (int i=0; i<data.size(); i++) {
+      duplicateArray.add(new ArrayList<Integer>());
+    }
+    return duplicateArray;
+  }
+
+  private void updateFieldColour() {
+    for (int i=0; i<duplicateValues.size(); i++) {
+      ArrayList<Integer> currentOuterBox;
+      currentOuterBox = duplicateValues.get(i);
+      System.out.println(currentOuterBox);
+      setTextFieldColor(currentOuterBox, i);
+    }
+  }
+  
   
 
   @Override
