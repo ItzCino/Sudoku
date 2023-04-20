@@ -138,50 +138,45 @@ public void checkAllOuterBoxes() {
     for (int i=0; i<data.size(); i++) {
     //   System.out.println("OUTER BOX: " + i);
       ArrayList<Integer> duplicates;
-      duplicates =  Sudoku.checkOuterBox(data.get(i), i);
+      duplicates =  Sudoku.getBoxDuplicates(data.get(i), i);
       System.out.println("BOX "+i+":\n" + duplicates + "\n");
       addDuplicates(duplicates, i);
     }
   }
 
   public void checkAllHorizontalRows() {
-    // checks each row of outer boxes at a time.
-    // for (int i=0; i<boxSize; i++) {
-    //   ArrayList<Sudoku> tempHorizontalRows = new ArrayList<Sudoku>();
-    //   for (int j=0; j<boxSize; j++) {
-    //     tempHorizontalRows.add(data.get(j).get(i));
-    //   }
-    // }
     // boxes (0 to 3), innerboxes (0 to 3) (3 to 6) (6 to 9)
-    ArrayList<Sudoku> duplicates;
+    // ArrayList<Sudoku> duplicates;
+    int outerLow = 0;
+    int outerHigh = boxSize;
+    for (int i=0 ; i<boxSize; i++) {
+      ArrayList<Sudoku> row;
+      ArrayList<Integer> duplicates;
 
-    duplicates = checkOuterBoxesHorizontal(0, 3, 0, 3);
-    duplicates = checkOuterBoxesHorizontal(0, 3, 3, 6);
-    duplicates = checkOuterBoxesHorizontal(0, 3, 6, 9);
+      int innerLow = 0;
+      int innerHigh = boxSize;
+      for (int j=0; j<boxSize; j++) {
+        row = Sudoku.getHorizontalRow(outerLow, outerHigh, innerLow, innerHigh, data);
+        duplicates = getHorizontalRowDuplicates(row);
+        // System.out.println(outerLow + ", " + outerHigh + ", " + innerLow + ", " + innerHigh);
+        // System.out.println();
+        // for (i = 0; i < row.size(); i++) {
+        //   System.out.print(row.get(i).getValue());
+        // }
+        // System.out.println();
+        innerLow += boxSize;
+        innerHigh += boxSize;
+      }
+      outerLow += boxSize;
+      outerHigh += boxSize;
+    }
+  }
 
-    duplicates = checkOuterBoxesHorizontal(3, 6, 0, 3);
-    duplicates = checkOuterBoxesHorizontal(3, 6, 3, 6);
-    duplicates = checkOuterBoxesHorizontal(3, 6, 6, 9);
+  public static ArrayList<Integer> getHorizontalRowDuplicates(ArrayList<Sudoku> row) {
+    return null;
 
-    duplicates = checkOuterBoxesHorizontal(6, 9, 0, 3);
-    duplicates = checkOuterBoxesHorizontal(6, 9, 3, 6);
-    duplicates = checkOuterBoxesHorizontal(6, 9, 6, 9);
-    
   }
   
-  // chosen route -> 0 to 3, 3 to 6, 6 to 9.
-  // *BOUNDS*: (OUTER-LOW, OUTER-HIGH, INNER-LOW, INNER-HIGH)
-  public ArrayList<Sudoku> checkOuterBoxesHorizontal(int outerLow, int outerHigh, int innerLow, int innerHigh) {
-    ArrayList<Sudoku> tempHorizontalRows = new ArrayList<Sudoku>();
-
-    for (int i = outerLow; i < outerHigh; i++) {
-      for (int j = innerLow; j < innerHigh; j++) {
-        tempHorizontalRows.add(data.get(j).get(i));
-      }
-    }
-    return tempHorizontalRows;
-  }
-
   public void addDuplicates(ArrayList<Integer> duplicates, int outerBox) {
     // for (int i=0; i<duplicates.size(); i++) {
     //   duplicateValues.add(outerBox, duplicates);

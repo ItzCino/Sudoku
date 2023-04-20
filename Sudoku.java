@@ -70,7 +70,7 @@ JTextField textField;
       this.textField.setBackground(Color.WHITE);
   }
 
-  public static ArrayList<Integer> checkOuterBox(ArrayList<Sudoku> outerBox, int outerBoxNumber) {
+  public static ArrayList<Integer> getBoxDuplicates(ArrayList<Sudoku> outerBox, int outerBoxNumber) {
     // creates a 2D array list to store duplicates
     ArrayList<Integer> duplicateArray = new ArrayList<Integer>();
     // * NOTE try to convert from string to int *
@@ -94,5 +94,22 @@ JTextField textField;
       }
     }
     return duplicateArray;
-  }    
+  }
+  
+  // chosen route -> 0 to 3, 3 to 6, 6 to 9.
+  // *BOUNDS*: (OUTER-LOW, OUTER-HIGH, INNER-LOW, INNER-HIGH)
+  public static ArrayList<Sudoku> getHorizontalRow(int outerLow, int outerHigh, int innerLow, int innerHigh, ArrayList<ArrayList<Sudoku>> data) {
+      ArrayList<Sudoku> tempHorizontalRows = new ArrayList<Sudoku>();
+
+      for (int i = outerLow; i < outerHigh; i++) {
+          for (int j = innerLow; j < innerHigh; j++) {
+              tempHorizontalRows.add(data.get(i).get(j));
+          }
+      }
+      for (Sudoku i : tempHorizontalRows) {
+          System.out.print(i.getValue());
+      }
+      System.out.println();
+      return tempHorizontalRows;
+  }
 }
