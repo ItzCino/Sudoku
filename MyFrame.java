@@ -125,6 +125,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
       }
     }
     checkAllOuterBoxes();
+    checkAllHorizontalRows();
     System.out.println("DUPSSS: \n"+duplicateValues+"\n");
     updateFieldColour();
 
@@ -144,9 +145,41 @@ public void checkAllOuterBoxes() {
   }
 
   public void checkAllHorizontalRows() {
-    for (int i=0; i<data.size(); i++) {
-      
+    // checks each row of outer boxes at a time.
+    // for (int i=0; i<boxSize; i++) {
+    //   ArrayList<Sudoku> tempHorizontalRows = new ArrayList<Sudoku>();
+    //   for (int j=0; j<boxSize; j++) {
+    //     tempHorizontalRows.add(data.get(j).get(i));
+    //   }
+    // }
+    // boxes (0 to 3), innerboxes (0 to 3) (3 to 6) (6 to 9)
+    ArrayList<Sudoku> duplicates;
+
+    duplicates = checkOuterBoxesHorizontal(0, 3, 0, 3);
+    duplicates = checkOuterBoxesHorizontal(0, 3, 3, 6);
+    duplicates = checkOuterBoxesHorizontal(0, 3, 6, 9);
+
+    duplicates = checkOuterBoxesHorizontal(3, 6, 0, 3);
+    duplicates = checkOuterBoxesHorizontal(3, 6, 3, 6);
+    duplicates = checkOuterBoxesHorizontal(3, 6, 6, 9);
+
+    duplicates = checkOuterBoxesHorizontal(6, 9, 0, 3);
+    duplicates = checkOuterBoxesHorizontal(6, 9, 3, 6);
+    duplicates = checkOuterBoxesHorizontal(6, 9, 6, 9);
+    
+  }
+  
+  // chosen route -> 0 to 3, 3 to 6, 6 to 9.
+  // *BOUNDS*: (OUTER-LOW, OUTER-HIGH, INNER-LOW, INNER-HIGH)
+  public ArrayList<Sudoku> checkOuterBoxesHorizontal(int outerLow, int outerHigh, int innerLow, int innerHigh) {
+    ArrayList<Sudoku> tempHorizontalRows = new ArrayList<Sudoku>();
+
+    for (int i = outerLow; i < outerHigh; i++) {
+      for (int j = innerLow; j < innerHigh; j++) {
+        tempHorizontalRows.add(data.get(j).get(i));
+      }
     }
+    return tempHorizontalRows;
   }
 
   public void addDuplicates(ArrayList<Integer> duplicates, int outerBox) {
