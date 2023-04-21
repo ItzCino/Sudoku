@@ -112,4 +112,19 @@ JTextField textField;
     //   System.out.println();
       return tempHorizontalRows;
   }
+
+  public static ArrayList<Sudoku> getVerticalColumn(int outerLow, int outerHigh, int innerLow, int innerHigh, ArrayList<ArrayList<Sudoku>> data) {
+    ArrayList<Sudoku> tempVerticalColumns = new ArrayList<Sudoku>();  
+    for (int i = outerLow; i <= outerHigh; i+=3) {
+      for (int j = innerLow; j <= innerHigh; j+=3) {
+        tempVerticalColumns.add(data.get(i).get(j));
+        // System.out.println(i+", "+j);
+      }
+    }
+    for (Sudoku i : tempVerticalColumns) {
+        System.out.print(i.getValue());
+    }
+    System.out.println();
+    return tempVerticalColumns;
+  }
 }

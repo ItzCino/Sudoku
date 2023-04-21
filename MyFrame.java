@@ -211,6 +211,7 @@ public void checkAllOuterBoxes() {
     // ArrayList<Sudoku> duplicates;
     int outerLow = 0;
     int outerHigh = 2*boxSize;
+    System.out.println("++++++++++++++++++++++");
     for (int i = 0; i < boxSize; i++) {
       ArrayList<Sudoku> column;
       ArrayList<Sudoku> duplicates;  
@@ -218,17 +219,38 @@ public void checkAllOuterBoxes() {
       int innerLow = 0;
       int innerHigh = 2*boxSize;
       for (int j = 0; j < boxSize; j++) {
-        column = Sudoku.getHorizontalRow(outerLow, outerHigh, innerLow, innerHigh, data);
-        duplicates = getHorizontalRowDuplicates(column);
+        column = Sudoku.getVerticalColumn(outerLow, outerHigh, innerLow, innerHigh, data);
+        // duplicates = getVerticalColumnsDuplicates(column);
         // addDuplicates(duplicates);
         System.out.println(outerLow+ "," + outerHigh + "," + innerLow + "," + innerHigh);
         innerLow++;
         innerHigh++;
-        
       }
       outerLow++;
       outerHigh++;
     }
+  }
+
+  public ArrayList<Sudoku> getVerticalColumnDuplicates(ArrayList<Sudoku> row) {
+      ArrayList<Sudoku> duplicates = new ArrayList<Sudoku>();
+      for (int i = 0; i < row.size(); i++) {
+          for (int j = 0; j < row.size(); j++) {
+              // System.out.println(i+"::"+j);
+              // System.out.println(i+"::"+j);
+              if (i == j) {
+                  continue; // skip if same index
+              }
+
+              if (row.get(i).getValue().equals(row.get(j).getValue())) {
+                  // add the part where compare if the value is the emtrpy input i.e ""
+                  if ((row.get(i).getValue().equals("")) == false) {
+                      duplicates.add(row.get(i));
+                  }
+              }
+          }
+      }
+      // System.out.println("BEFORE: " +row+ "::" +"DIP:"+duplicates);
+      return duplicates;
   }
   
   public void addDuplicateFromSudokuType(Sudoku field) {
