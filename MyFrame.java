@@ -126,6 +126,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     }
     checkAllOuterBoxes();
     checkAllHorizontalRows();
+    checkAllVerticalColumns();
     System.out.println("\nDUPSSS: \n"+duplicateValues+"\n");
     updateFieldColour();
 
@@ -144,6 +145,7 @@ public void checkAllOuterBoxes() {
     }
   }
 
+  // Horizontal Checking (Next 2 methods)
   public void checkAllHorizontalRows() {
     // boxes (0 to 3), innerboxes (0 to 3) (3 to 6) (6 to 9)
     // ArrayList<Sudoku> duplicates;
@@ -185,8 +187,48 @@ public void checkAllOuterBoxes() {
         }
       }
     }
-    System.out.println("BEFORE: " +row+ "::" +"DIP:"+duplicates);
+    // System.out.println("BEFORE: " +row+ "::" +"DIP:"+duplicates);
     return duplicates;
+  }
+
+  public void checkAllVerticalColumns() {
+
+    // go from top to bottom, left to right, check each column
+    // inner from 0 to 3, outer from 0 to 3
+    // getVerticalColumn(0, 6, 0, 6);
+    // getVerticalColumn(0, 6, 1, 7);
+    // getVerticalColumn(0, 6, 2, 8);
+
+    // getVerticalColumn(1, 7, 0, 6);
+    // getVerticalColumn(1, 7, 1, 7);
+    // getVerticalColumn(1, 7, 2, 8);
+
+    // getVerticalColumn(2, 8, 0, 6);
+    // getVerticalColumn(2, 8, 1, 7);
+    // getVerticalColumn(2, 8, 2, 8);
+
+    // boxes (0 to 3), innerboxes (0 to 3) (3 to 6) (6 to 9)
+    // ArrayList<Sudoku> duplicates;
+    int outerLow = 0;
+    int outerHigh = 2*boxSize;
+    for (int i = 0; i < boxSize; i++) {
+      ArrayList<Sudoku> column;
+      ArrayList<Sudoku> duplicates;  
+      
+      int innerLow = 0;
+      int innerHigh = 2*boxSize;
+      for (int j = 0; j < boxSize; j++) {
+        column = Sudoku.getHorizontalRow(outerLow, outerHigh, innerLow, innerHigh, data);
+        duplicates = getHorizontalRowDuplicates(column);
+        // addDuplicates(duplicates);
+        System.out.println(outerLow+ "," + outerHigh + "," + innerLow + "," + innerHigh);
+        innerLow++;
+        innerHigh++;
+        
+      }
+      outerLow++;
+      outerHigh++;
+    }
   }
   
   public void addDuplicateFromSudokuType(Sudoku field) {
