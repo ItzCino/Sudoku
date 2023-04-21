@@ -32,8 +32,8 @@ public class Sudoku {
     this.textField = textField;
   }
 
-  public void setValue() {
-    this.value = this.textField.getText();
+  public void setValue(String text) {
+    this.textField.setText(text);
   }
 
   public String getValue() {

@@ -32,7 +32,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   int[][] sudokuData = new int[noOfRows][noOfColumns];
   ArrayList<ArrayList<Sudoku>> data = new ArrayList<ArrayList<Sudoku>>();
   // EACH ROW REPRESENTS EACH OUTER BOX
-  ArrayList<ArrayList<Integer>> duplicateValues = createDuplicateValuesArray();
+  ArrayList<ArrayList<Integer>> duplicateValues;
 
   public MyFrame() {
     this.setTitle("Susdoku");  // sets title of window
@@ -113,8 +113,9 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   }
 
   public void updateData() {
-    System.out.println("======NEW DATA================");
+    Boolean isThereDuplicateValues;
     duplicateValues = createDuplicateValuesArray();
+    System.out.println("======NEW DATA================");
     for (int i=0; i<data.size(); i++) {
       for (int j = 0; j < data.size(); j++) {
         data.get(i).get(j).getValue();
@@ -123,7 +124,9 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     checkAllOuterBoxes();
     checkAllHorizontalRows();
     checkAllVerticalColumns();
-    System.out.println("\nDUPSSS: \n"+duplicateValues+"\n");
+    // System.out.println("\nDUPSSS: \n"+duplicateValues+"\n");
+    isThereDuplicateValues = areThereDuplicates();
+    System.out.println("Duplicates: " + isThereDuplicateValues);
     updateFieldColour();
     printInput();
   }
@@ -206,6 +209,15 @@ public void checkAllOuterBoxes() {
     return duplicates;
   }
 
+  public Boolean areThereDuplicates() {
+    for (int i = 0; i < duplicateValues.size(); i++) {
+      if (duplicateValues.get(i).size() > 0) {
+        return true;
+      }
+    }
+    return false;    
+  }
+
   public void addDuplicates(ArrayList<Sudoku> duplicates) {
     for (int i = 0; i < duplicates.size(); i++) {
       addDuplicateFromSudokuType(duplicates.get(i));
@@ -279,7 +291,9 @@ public void checkAllOuterBoxes() {
     //   System.out.println("SOLVING...");
     // // System.out.println("hello! "+ text.getText());
     // }
-    System.out.println("SOLVING...");
+    data.get(8).get(8).setValue("69");
+
+    System.out.println("SOLVING..."+" (8,8): "+data.get(8).get(8).getValue());
 
   }
 
