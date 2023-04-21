@@ -5,9 +5,8 @@ import java.util.Arrays;
 import javax.swing.JTextField;
 
 public class Sudoku {
-  private static final String NullPointerException = null;
 
-JTextField textField;
+  JTextField textField;
     
   String value = "";
   int row;
@@ -35,14 +34,10 @@ JTextField textField;
 
   public void setValue() {
     this.value = this.textField.getText();
-    // System.out.println("::" + this.value);
   }
 
   public String getValue() {
     String thisValue = this.textField.getText();
-    // if (this.textField.getText().equals("")) {
-    //   System.out.println("SDASDADASF");
-    // }
     return thisValue;
   }
 
@@ -106,10 +101,6 @@ JTextField textField;
               tempHorizontalRows.add(data.get(i).get(j));
           }
       }
-    //   for (Sudoku i : tempHorizontalRows) {
-    //       System.out.print(i.getValue());
-    //   }
-    //   System.out.println();
       return tempHorizontalRows;
   }
 
@@ -118,13 +109,8 @@ JTextField textField;
     for (int i = outerLow; i <= outerHigh; i+=3) {
       for (int j = innerLow; j <= innerHigh; j+=3) {
         tempVerticalColumns.add(data.get(i).get(j));
-        // System.out.println(i+", "+j);
       }
     }
-    for (Sudoku i : tempVerticalColumns) {
-        System.out.print(i.getValue());
-    }
-    System.out.println();
     return tempVerticalColumns;
   }
 }

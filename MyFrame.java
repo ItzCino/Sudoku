@@ -40,16 +40,11 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     this.setSize(750, 750);
     this.setLocation(800, 200);
 
-    // mainPanel.setLocation(100, 250);
-    
     int boxCounter = 0;
     for (int row = 0; row < boxSize; row++) {
-
       for (int col = 0; col < boxSize; col++) {
-        // System.out.println(boxCounter);
         data.add(new ArrayList<Sudoku>());
         JPanel panel = new JPanel(new GridLayout(boxSize, boxSize, 1, 1));
-        // JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.BLACK);
         panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         int innerCounter = 0;
@@ -62,7 +57,6 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
             panelTemplate.add(text);
             panel.add(panelTemplate);
             data.get(boxCounter).add(innerCounter, new Sudoku(row, col, i, j, boxCounter, innerCounter, text)); 
-            // System.out.println(innerCounter);
             innerCounter++;
           }
         }
@@ -71,20 +65,16 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
       }
     }
 
-    // this.setLayout(new FlowLayout());  // sets layout manager
-
     // sets background color of window & sets an icon image
     this.getContentPane().setBackground(new Color(255, 255, 255));
     ImageIcon windowIcon = new ImageIcon("sus.png");
     this.setIconImage(windowIcon.getImage());
 
     // button = new JButton("press_me");
-    // button.addActionListener(this);
-
-    // createGrid(noOfRows, noOfColumns);
-    this.add(mainPanel);
-    
+    // button.addActionListener(this);    
     // this.add(button);
+
+    this.add(mainPanel);
     this.setVisible(true); // makes window visible
   }
 
@@ -101,7 +91,6 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   // displays stored text
   public void printInput() {
     System.out.println("\nEACH ROW REPRESENTS EACH BOX");
-    // System.out.println(data.size());
     for (int i=0; i<data.size(); i++) {
       System.out.println();
       System.out.print(i+":");
@@ -109,11 +98,6 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
         System.out.print(data.get(i).get(j).getValue());
       }
     }
-
-    // System.out.println("============");
-    // for (int i=0;i<noOfRows;i++) {
-    //   System.out.println(i + " : " + textFields.get(i).getLocation(getLocation()) + " : " +textFields.get(i).getText());
-    // }
   }
 
   public void updateData() {
@@ -129,9 +113,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     checkAllVerticalColumns();
     System.out.println("\nDUPSSS: \n"+duplicateValues+"\n");
     updateFieldColour();
-
     printInput();
-    // printInput();
   }
 
 public void checkAllOuterBoxes() {
@@ -159,7 +141,7 @@ public void checkAllOuterBoxes() {
       int innerHigh = boxSize;
       for (int j=0; j<boxSize; j++) {
         row = Sudoku.getHorizontalRow(outerLow, outerHigh, innerLow, innerHigh, data);
-        duplicates = getHorizontalRowDuplicates(row);
+        duplicates = getDuplicates(row);
         addDuplicates(duplicates);
         innerLow += boxSize;
         innerHigh += boxSize;
@@ -169,25 +151,22 @@ public void checkAllOuterBoxes() {
     }
   }
 
-  public ArrayList<Sudoku> getHorizontalRowDuplicates(ArrayList<Sudoku> row) {
+  public ArrayList<Sudoku> getDuplicates(ArrayList<Sudoku> row) {
     ArrayList<Sudoku> duplicates = new ArrayList<Sudoku>();
     for (int i=0; i<row.size(); i++) {
       for (int j=0; j<row.size(); j++) {
-        // System.out.println(i+"::"+j);
-        // System.out.println(i+"::"+j);
         if (i==j) {
           continue; // skip if same index
         }
 
         if (row.get(i).getValue().equals(row.get(j).getValue())) {
-            // add the part where compare if the value is the emtrpy input i.e ""
+          // add the part where compare if the value is the emtrpy input i.e ""
           if ((row.get(i).getValue().equals("")) == false) { 
             duplicates.add(row.get(i));
           }
         }
       }
     }
-    // System.out.println("BEFORE: " +row+ "::" +"DIP:"+duplicates);
     return duplicates;
   }
 
@@ -198,7 +177,6 @@ public void checkAllOuterBoxes() {
     // ArrayList<Sudoku> duplicates;
     int outerLow = 0;
     int outerHigh = 2*boxSize;
-    System.out.println("++++++++++++++++++++++");
     for (int i = 0; i < boxSize; i++) {
       ArrayList<Sudoku> column;
       ArrayList<Sudoku> duplicates;  
@@ -207,9 +185,8 @@ public void checkAllOuterBoxes() {
       int innerHigh = 2*boxSize;
       for (int j = 0; j < boxSize; j++) {
         column = Sudoku.getVerticalColumn(outerLow, outerHigh, innerLow, innerHigh, data);
-        duplicates = getVerticalColumnDuplicates(column);
+        duplicates = getDuplicates(column);
         addDuplicates(duplicates);
-        System.out.println(outerLow+ "," + outerHigh + "," + innerLow + "," + innerHigh);
         innerLow++;
         innerHigh++;
       }
@@ -217,33 +194,14 @@ public void checkAllOuterBoxes() {
       outerHigh++;
     }
   }
-
-  public ArrayList<Sudoku> getVerticalColumnDuplicates(ArrayList<Sudoku> row) {
-    ArrayList<Sudoku> duplicates = new ArrayList<Sudoku>();
-    for (int i = 0; i < row.size(); i++) {
-      for (int j = 0; j < row.size(); j++) {
-        // System.out.println(i+"::"+j);
-        // System.out.println(i+"::"+j);
-        if (i == j) {
-          continue; // skip if same index
-        }  
-        if (row.get(i).getValue().equals(row.get(j).getValue())) {
-          // add the part where compare if the value is the emtrpy input i.e ""
-          if ((row.get(i).getValue().equals("")) == false) {
-            duplicates.add(row.get(i));
-          }
-        }
-      }
-    }
-    // System.out.println("BEFORE: " +row+ "::" +"DIP:"+duplicates);
-    return duplicates;
-  }
   
   public void addDuplicateFromSudokuType(Sudoku field) {
     int outerBox = field.getOuterBoxIDInt();
     int innerBox = field.getInnerBoxIDInt();
-    // if (data.get(outerBox).get(innerBox) != field) {
       duplicateValues.get(outerBox).add(innerBox);
+      duplicateValues.get(outerBox).add(innerBox);
+    // }
+    duplicateValues.get(outerBox).add(innerBox);
     // }
   }
   
@@ -251,7 +209,6 @@ public void checkAllOuterBoxes() {
     for (int i=0; i<duplicates.size(); i++) {
       addDuplicateFromSudokuType(duplicates.get(i));
     }
-    // duplicateValues.set(outerBox, duplicates);
   }
   
   // **ONLY** updates each OUTER BOX, ONE at a time.
@@ -290,7 +247,7 @@ public void checkAllOuterBoxes() {
   public ArrayList<ArrayList<Integer>> createDuplicateValuesArray() {
     ArrayList<ArrayList<Integer>> duplicateArray;
     duplicateArray = new ArrayList<ArrayList<Integer>>();
-    for (int i=0; i<data.size(); i++) {
+    for (int i=0; i<noOfRows; i++) {
       duplicateArray.add(new ArrayList<Integer>());
     }
     return duplicateArray;
@@ -305,11 +262,9 @@ public void checkAllOuterBoxes() {
     }
   }
   
-  
-
   @Override
   public void actionPerformed(ActionEvent e) {
-  if (e.getSource() == button) {
+    if (e.getSource() == button) {
     // System.out.println("hello! "+ text.getText());
     }
   }
@@ -326,7 +281,7 @@ public void checkAllOuterBoxes() {
 
   @Override
   public void changedUpdate(DocumentEvent e) {
-    // updateData();
+    return;
   }
 }
  
