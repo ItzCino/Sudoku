@@ -70,9 +70,9 @@ JTextField textField;
       this.textField.setBackground(Color.WHITE);
   }
 
-  public static ArrayList<Integer> getBoxDuplicates(ArrayList<Sudoku> outerBox, int outerBoxNumber) {
+  public static ArrayList<Sudoku> getBoxDuplicates(ArrayList<Sudoku> outerBox, int outerBoxNumber) {
     // creates a 2D array list to store duplicates
-    ArrayList<Integer> duplicateArray = new ArrayList<Integer>();
+    ArrayList<Sudoku> duplicateArray = new ArrayList<Sudoku>();
     // * NOTE try to convert from string to int *
     for (int innerBox=0; innerBox<outerBox.size(); innerBox++) {
       // get the value of the current box
@@ -88,7 +88,7 @@ JTextField textField;
         if ((currentInnerBox.equals(currentValue)) && (currentValue.equals("") == false)) {
           // this condition prevents duplicate "red fields" from being added to the array 
           if (duplicateArray.contains(innerBoxBox) == false) {
-            duplicateArray.add(innerBoxBox);
+            duplicateArray.add(outerBox.get(innerBox));
           }
         } 
       }
@@ -106,10 +106,10 @@ JTextField textField;
               tempHorizontalRows.add(data.get(i).get(j));
           }
       }
-      for (Sudoku i : tempHorizontalRows) {
-          System.out.print(i.getValue());
-      }
-      System.out.println();
+    //   for (Sudoku i : tempHorizontalRows) {
+    //       System.out.print(i.getValue());
+    //   }
+    //   System.out.println();
       return tempHorizontalRows;
   }
 }

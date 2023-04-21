@@ -126,7 +126,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     }
     checkAllOuterBoxes();
     checkAllHorizontalRows();
-    System.out.println("DUPSSS: \n"+duplicateValues+"\n");
+    System.out.println("\nDUPSSS: \n"+duplicateValues+"\n");
     updateFieldColour();
 
     printInput();
@@ -137,10 +137,10 @@ public void checkAllOuterBoxes() {
     System.out.println();
     for (int i=0; i<data.size(); i++) {
     //   System.out.println("OUTER BOX: " + i);
-      ArrayList<Integer> duplicates;
+      ArrayList<Sudoku> duplicates;
       duplicates =  Sudoku.getBoxDuplicates(data.get(i), i);
       System.out.println("BOX "+i+":\n" + duplicates + "\n");
-      addDuplicates(duplicates, i);
+      addDuplicates(duplicates);
     }
   }
 
@@ -151,19 +151,14 @@ public void checkAllOuterBoxes() {
     int outerHigh = boxSize;
     for (int i=0 ; i<boxSize; i++) {
       ArrayList<Sudoku> row;
-      ArrayList<Integer> duplicates;
+      ArrayList<Sudoku> duplicates;
 
       int innerLow = 0;
       int innerHigh = boxSize;
       for (int j=0; j<boxSize; j++) {
         row = Sudoku.getHorizontalRow(outerLow, outerHigh, innerLow, innerHigh, data);
         duplicates = getHorizontalRowDuplicates(row);
-        // System.out.println(outerLow + ", " + outerHigh + ", " + innerLow + ", " + innerHigh);
-        // System.out.println();
-        // for (i = 0; i < row.size(); i++) {
-        //   System.out.print(row.get(i).getValue());
-        // }
-        // System.out.println();
+        addDuplicates(duplicates);
         innerLow += boxSize;
         innerHigh += boxSize;
       }
@@ -172,16 +167,41 @@ public void checkAllOuterBoxes() {
     }
   }
 
-  public static ArrayList<Integer> getHorizontalRowDuplicates(ArrayList<Sudoku> row) {
-    return null;
+  public ArrayList<Sudoku> getHorizontalRowDuplicates(ArrayList<Sudoku> row) {
+    ArrayList<Sudoku> duplicates = new ArrayList<Sudoku>();
+    for (int i=0; i<row.size(); i++) {
+      for (int j=0; j<row.size(); j++) {
+        // System.out.println(i+"::"+j);
+        // System.out.println(i+"::"+j);
+        if (i==j) {
+          continue; // skip if same index
+        }
 
+        if (row.get(i).getValue().equals(row.get(j).getValue())) {
+            // add the part where compare if the value is the emtrpy input i.e ""
+          if ((row.get(i).getValue().equals("")) == false) { 
+            duplicates.add(row.get(i));
+          }
+        }
+      }
+    }
+    System.out.println("BEFORE: " +row+ "::" +"DIP:"+duplicates);
+    return duplicates;
   }
   
-  public void addDuplicates(ArrayList<Integer> duplicates, int outerBox) {
-    // for (int i=0; i<duplicates.size(); i++) {
-    //   duplicateValues.add(outerBox, duplicates);
+  public void addDuplicateFromSudokuType(Sudoku field) {
+    int outerBox = field.getOuterBoxIDInt();
+    int innerBox = field.getInnerBoxIDInt();
+    // if (data.get(outerBox).get(innerBox) != field) {
+      duplicateValues.get(outerBox).add(innerBox);
     // }
-    duplicateValues.set(outerBox, duplicates);
+  }
+  
+  public void addDuplicates(ArrayList<Sudoku> duplicates) {
+    for (int i=0; i<duplicates.size(); i++) {
+      addDuplicateFromSudokuType(duplicates.get(i));
+    }
+    // duplicateValues.set(outerBox, duplicates);
   }
   
   // **ONLY** updates each OUTER BOX, ONE at a time.
