@@ -1,6 +1,5 @@
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.swing.JTextField;
 
@@ -9,6 +8,9 @@ public class Sudoku {
   JTextField textField;
     
   String value = "";
+
+  Boolean editable = true;
+
   int row;
   int column;
   int innerRow;
@@ -32,13 +34,24 @@ public class Sudoku {
     this.textField = textField;
   }
 
+  public void setEditable(Boolean immutability) {
+    this.editable = immutability;
+  }
+
+  public Boolean getImmutability() {
+    return this.editable;
+  }
+
   public void setValue(String text) {
     this.textField.setText(text);
   }
 
-  public String getValue() {
-    String thisValue = this.textField.getText();
-    return thisValue;
+  public String getCurrentValue() {
+    return this.value;
+  }
+
+  public String getNewValue() {
+    return this.textField.getText();
   }
 
   public String getInnerBoxIDStr() {
@@ -71,7 +84,7 @@ public class Sudoku {
     // * NOTE try to convert from string to int *
     for (int innerBox=0; innerBox<outerBox.size(); innerBox++) {
       // get the value of the current box
-      String currentInnerBox = outerBox.get(innerBox).getValue();
+      String currentInnerBox = outerBox.get(innerBox).getNewValue();
       // check if the value is a duplicate
       for (int innerBoxBox = 0; innerBoxBox < outerBox.size(); innerBoxBox++) {
         int innerID = outerBox.get(innerBox).getInnerBoxIDInt();
@@ -79,7 +92,7 @@ public class Sudoku {
         if ((outerBoxNumber == (outerID)) && (innerBoxBox == (innerID))) {
           continue;
         }
-        String currentValue = outerBox.get(innerBoxBox).getValue();
+        String currentValue = outerBox.get(innerBoxBox).getNewValue();
         if ((currentInnerBox.equals(currentValue)) && (currentValue.equals("") == false)) {
           // this condition prevents duplicate "red fields" from being added to the array 
           if (duplicateArray.contains(innerBoxBox) == false) {

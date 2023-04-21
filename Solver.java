@@ -1,6 +1,11 @@
 import java.util.ArrayList;
 
 public class Solver {
+
+  public static void SolveSudoku() {
+    // get the data from the GUI
+  }
+
   public static ArrayList<Sudoku> getDuplicates(ArrayList<Sudoku> row) {
     ArrayList<Sudoku> duplicates = new ArrayList<Sudoku>();
     for (int i = 0; i < row.size(); i++) {
@@ -8,9 +13,9 @@ public class Solver {
         if (i == j) {
           continue; // skip if same index
         }  
-        if (row.get(i).getValue().equals(row.get(j).getValue())) {
+        if (row.get(i).getNewValue().equals(row.get(j).getNewValue())) {
           // add the part where compare if the value is the emtrpy input i.e ""
-          if ((row.get(i).getValue().equals("")) == false) {
+          if ((row.get(i).getNewValue().equals("")) == false) {
             duplicates.add(row.get(i));
           }
         }

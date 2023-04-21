@@ -10,7 +10,7 @@ public class GridCheck {
     //   System.out.println("OUTER BOX: " + i);
       ArrayList<Sudoku> duplicates;
       duplicates =  Sudoku.getBoxDuplicates(data.get(i), i);
-      System.out.println("BOX "+i+":\n" + duplicates + "\n");
+    //   System.out.println("BOX "+i+":\n" + duplicates + "\n");
       Solver.addDuplicates(duplicates, duplicateValues);
     }
   }
