@@ -18,7 +18,6 @@ import java.util.ArrayList;
 
 public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   // new GUI window to add components to
-
   JButton button;
   ArrayList<JTextField> textFields = new ArrayList<JTextField>();
   int boxSize = 3; // 3x3 grid
@@ -86,7 +85,6 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     masterPanel.setDividerLocation(750);
     mainPanel.setMinimumSize(new Dimension(750, 750));
     this.add(masterPanel);
-
     this.setVisible(true); // makes window visible
   }
 
@@ -113,7 +111,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   }
 
   public void updateData() {
-    Boolean isThereDuplicateValues;
+    Boolean areThereDuplicateValues;
     duplicateValues = createDuplicateValuesArray();
     System.out.println("======NEW DATA================");
     for (int i=0; i<data.size(); i++) {
@@ -121,150 +119,13 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
         data.get(i).get(j).getValue();
       }
     }
-    checkAllOuterBoxes();
-    checkAllHorizontalRows();
-    checkAllVerticalColumns();
-    // System.out.println("\nDUPSSS: \n"+duplicateValues+"\n");
-    isThereDuplicateValues = areThereDuplicates();
-    System.out.println("Duplicates: " + isThereDuplicateValues);
-    updateFieldColour();
+    GridCheck.checkAllOuterBoxes(duplicateValues, data);
+    GridCheck.checkAllHorizontalRows(boxSize, duplicateValues, data);
+    GridCheck.checkAllVerticalColumns(boxSize, duplicateValues, data);
+    areThereDuplicateValues = Solver.areThereDuplicates(duplicateValues);
+    System.out.println("Duplicates: " + areThereDuplicateValues);
+    Fields.updateFieldColour(duplicateValues, data);
     printInput();
-  }
-
-public void checkAllOuterBoxes() {
-    System.out.println();
-    for (int i=0; i<data.size(); i++) {
-    //   System.out.println("OUTER BOX: " + i);
-      ArrayList<Sudoku> duplicates;
-      duplicates =  Sudoku.getBoxDuplicates(data.get(i), i);
-      System.out.println("BOX "+i+":\n" + duplicates + "\n");
-      addDuplicates(duplicates);
-    }
-  }
-
-  // Horizontal Checking (Next 2 methods)
-  public void checkAllHorizontalRows() {
-    // boxes (0 to 3), innerboxes (0 to 3) (3 to 6) (6 to 9)
-    // ArrayList<Sudoku> duplicates;
-    int outerLow = 0;
-    int outerHigh = boxSize;
-    for (int i=0 ; i<boxSize; i++) {
-      ArrayList<Sudoku> row;
-      ArrayList<Sudoku> duplicates;
-
-      int innerLow = 0;
-      int innerHigh = boxSize;
-      for (int j=0; j<boxSize; j++) {
-        row = Sudoku.getHorizontalRow(outerLow, outerHigh, innerLow, innerHigh, data);
-        duplicates = getDuplicates(row);
-        addDuplicates(duplicates);
-        innerLow += boxSize;
-        innerHigh += boxSize;
-      }
-      outerLow += boxSize;
-      outerHigh += boxSize;
-    }
-  }
-
-  public void checkAllVerticalColumns() {
-    // go from top to bottom, left to right, check each column
-    // inner from 0 to 6, outer from 0 to 6, increment by 1 per iteration
-    // boxes (0 to 3), innerboxes (0 to 3) (3 to 6) (6 to 9)
-    // ArrayList<Sudoku> duplicates;
-    int outerLow = 0;
-    int outerHigh = 2*boxSize;
-    for (int i = 0; i < boxSize; i++) {
-      ArrayList<Sudoku> column;
-      ArrayList<Sudoku> duplicates;  
-      
-      int innerLow = 0;
-      int innerHigh = 2*boxSize;
-      for (int j = 0; j < boxSize; j++) {
-        column = Sudoku.getVerticalColumn(outerLow, outerHigh, innerLow, innerHigh, data);
-        duplicates = getDuplicates(column);
-        addDuplicates(duplicates);
-        innerLow++;
-        innerHigh++;
-      }
-      outerLow++;
-      outerHigh++;
-    }
-  }
-
-  public ArrayList<Sudoku> getDuplicates(ArrayList<Sudoku> row) {
-    ArrayList<Sudoku> duplicates = new ArrayList<Sudoku>();
-    for (int i = 0; i < row.size(); i++) {
-      for (int j = 0; j < row.size(); j++) {
-        if (i == j) {
-          continue; // skip if same index
-        }  
-        if (row.get(i).getValue().equals(row.get(j).getValue())) {
-          // add the part where compare if the value is the emtrpy input i.e ""
-          if ((row.get(i).getValue().equals("")) == false) {
-            duplicates.add(row.get(i));
-          }
-        }
-      }
-    }
-    return duplicates;
-  }
-
-  public Boolean areThereDuplicates() {
-    for (int i = 0; i < duplicateValues.size(); i++) {
-      if (duplicateValues.get(i).size() > 0) {
-        return true;
-      }
-    }
-    return false;    
-  }
-
-  public void addDuplicates(ArrayList<Sudoku> duplicates) {
-    for (int i = 0; i < duplicates.size(); i++) {
-      addDuplicateFromSudokuType(duplicates.get(i));
-    }
-  }
-  
-  public void addDuplicateFromSudokuType(Sudoku field) {
-    int outerBox = field.getOuterBoxIDInt();
-    int innerBox = field.getInnerBoxIDInt();
-    duplicateValues.get(outerBox).add(innerBox);
-    duplicateValues.get(outerBox).add(innerBox);
-    duplicateValues.get(outerBox).add(innerBox);
-  }
-  
-
-  
-  // **ONLY** updates each OUTER BOX, ONE at a time.
-  public void setTextFieldColor(ArrayList<Integer> redBoxes, int outerBox) {
-    // resets the color of the text field to white, even if there are no duplicates.
-    if (redBoxes.size() == 0) {
-      resetBoxFields(outerBox);
-      return;
-    }
-    // sets all duplicate fields to red
-    resetBoxFields(outerBox);
-    for (int innerRedBox = 0; innerRedBox < redBoxes.size(); innerRedBox++) {
-      for (int innerBox = 0; innerBox < data.size(); innerBox++) {
-        if (redBoxes.get(innerRedBox) == innerBox) {
-          data.get(outerBox).get(innerBox).setRedField();
-          break;
-        } 
-      }
-    }
-  }
-
-  public void resetAllTextFields() {
-    for (int outerBox = 0; outerBox < data.size(); outerBox++) {
-      for (int innerBox = 0; innerBox < data.size(); innerBox++) {
-        data.get(outerBox).get(innerBox).setWhiteField();
-      }
-    }
-  }
-
-  public void resetBoxFields(int outerBox) {
-    for (int innerBox = 0; innerBox < data.size(); innerBox++) {
-      data.get(outerBox).get(innerBox).setWhiteField();
-    }
   }
 
   public ArrayList<ArrayList<Integer>> createDuplicateValuesArray() {
@@ -275,26 +136,11 @@ public void checkAllOuterBoxes() {
     }
     return duplicateArray;
   }
-
-  private void updateFieldColour() {
-    for (int i=0; i<duplicateValues.size(); i++) {
-      ArrayList<Integer> currentOuterBox;
-      currentOuterBox = duplicateValues.get(i);
-      System.out.println(currentOuterBox);
-      setTextFieldColor(currentOuterBox, i);
-    }
-  }
   
   @Override
   public void actionPerformed(ActionEvent e) {
-    // if (e.getSource() == button) {
-    //   System.out.println("SOLVING...");
-    // // System.out.println("hello! "+ text.getText());
-    // }
     data.get(8).get(8).setValue("69");
-
     System.out.println("SOLVING..."+" (8,8): "+data.get(8).get(8).getValue());
-
   }
 
   @Override
