@@ -1,5 +1,6 @@
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -37,8 +38,8 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     this.setTitle("Susdoku");  // sets title of window
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // exits program when window is closed
     this.setResizable(false);  // prevents window from being resized
-    this.setSize(750, 750);
-    this.setLocation(800, 200);
+    this.setSize(900, 800);
+    this.setLocation(750, 175);
 
     int boxCounter = 0;
     for (int row = 0; row < boxSize; row++) {
@@ -74,7 +75,18 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     // button.addActionListener(this);    
     // this.add(button);
 
-    this.add(mainPanel);
+    JButton solveButton = new JButton("Solve");
+    solveButton.addActionListener(this);
+
+    JPanel solvePanel = new JPanel();
+    solvePanel.setPreferredSize(getPreferredSize());
+    solvePanel.add(solveButton);
+
+    JSplitPane masterPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mainPanel, solvePanel);
+    masterPanel.setDividerLocation(750);
+    mainPanel.setMinimumSize(new Dimension(750, 750));
+    this.add(masterPanel);
+
     this.setVisible(true); // makes window visible
   }
 
@@ -263,9 +275,12 @@ public void checkAllOuterBoxes() {
   
   @Override
   public void actionPerformed(ActionEvent e) {
-    if (e.getSource() == button) {
-    // System.out.println("hello! "+ text.getText());
-    }
+    // if (e.getSource() == button) {
+    //   System.out.println("SOLVING...");
+    // // System.out.println("hello! "+ text.getText());
+    // }
+    System.out.println("SOLVING...");
+
   }
 
   @Override
