@@ -2,6 +2,9 @@ import java.util.ArrayList;
 
 public class Solver {
 
+  // solver should copy over the entire arraylist and check if it is valid 'i.e no red fields'
+  // solver should then brute force to solution provided the problem is valid
+  // solver should then be keeping the "problem" fields the same. and should not share the same pointer to the original so a copy is made
   public static void SolveSudoku() {
     // get the data from the GUI
   }
