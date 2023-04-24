@@ -7,7 +7,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,10 +19,7 @@ import java.util.ArrayList;
 public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   // new GUI window to add components to
   JButton solveButton;
-  JCheckBox makePuzzle;
   
-  Editing_Mode editingMode = Editing_Mode.NON_EDITABLE;
-  Boolean editable = true;
   ArrayList<JTextField> textFields = new ArrayList<JTextField>();
   int boxSize = 3; // 3x3 grid
   int noOfTextFields = boxSize* boxSize*boxSize;
@@ -83,12 +79,8 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     this.solveButton = new JButton("Solve");
     this.solveButton.addActionListener(this);
 
-    this.makePuzzle = new JCheckBox("Make Puzzle", false);
-    this.makePuzzle.addActionListener(this);
-
     JPanel solvePanel = new JPanel();
     solvePanel.add(this.solveButton);
-    solvePanel.add(this.makePuzzle);
 
     JSplitPane masterPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mainPanel, solvePanel);
     masterPanel.setDividerLocation(750);
@@ -124,7 +116,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     duplicateValues = createDuplicateValuesArray();
     System.out.println("======NEW DATA================");
     
-    updateGrid();
+    // updateGrid();
     GridCheck.checkAllOuterBoxes(duplicateValues, data);
     GridCheck.checkAllHorizontalRows(boxSize, duplicateValues, data);
     GridCheck.checkAllVerticalColumns(boxSize, duplicateValues, data);
@@ -133,43 +125,6 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     Fields.updateFieldColour(duplicateValues, data);
     printInput();
     copyData();
-  }
-
-  public void updateGrid() {
-    Sudoku currentField;
-    String currentCopy;
-    if (this.editingMode == Editing_Mode.EDITABLE) {
-      for (int i=0; i<data.size(); i++) {
-        for (int j = 0; j < data.size(); j++) {
-          currentField = data.get(i).get(j);
-          currentCopy = previousData.get(i).get(j);
-          if (currentField.getNewValue().equals(currentCopy) == false) {
-            currentField.setEditable(editable);
-          }
-        //   data.get(i).get(j).setEditable(false);
-        /*  
-         * 
-         * ENDED OFF HERE NEED TO FIGURE OUT HOW TO know if the value has changed
-         * AND FROM KNOWING THIS, WE CAN UPDATE THE PROPERTIES OF THE FIELD, SO THAT
-         * THE VALUE CANNOT BE CHANGED WHEN 'MAKE PUZZLE' MODE IS EXITED.
-         */
-        }
-      }
-      System.out.println("EDIT");
-    } 
-    if (this.editingMode == Editing_Mode.NON_EDITABLE) {
-      for (int i=0; i<data.size(); i++) {
-        for (int j = 0; j < data.size(); j++) {
-          currentField = data.get(i).get(j);
-          if (currentField.getImmutability() == true) {
-            System.out.println("TRUE");
-            currentField.getNewValue();
-          }
-        }
-      }
-      System.out.println("NO_EDIT");
-
-    }
   }
 
   public void copyData() {
@@ -195,16 +150,6 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   @Override
   public void actionPerformed(ActionEvent e) {
     // System.out.println(this.makePuzzle);
-    if (e.getSource() == this.makePuzzle) {
-      if (this.makePuzzle.isSelected()) {
-        this.editable = false;
-        this.editingMode = Editing_Mode.EDITABLE;
-      } else {
-        this.editable = true;
-        this.editingMode = Editing_Mode.NON_EDITABLE;
-      }
-      System.out.println(this.editable);
-    }
     if (e.getSource() == this.solveButton) {
       Solver.SolveSudoku();
       System.out.println("Solve");
