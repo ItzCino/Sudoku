@@ -19,11 +19,13 @@ import java.util.ArrayList;
 public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   // new GUI window to add components to
   JButton solveButton;
-  
   ArrayList<JTextField> textFields = new ArrayList<JTextField>();
-  int boxSize = 3; // 3x3 grid
+
+  Boolean areThereDuplicateValues;
+
+  static int boxSize = 3; // 3x3 grid
   int noOfTextFields = boxSize* boxSize*boxSize;
-  int noOfRows = boxSize*boxSize;
+  static int noOfRows = boxSize*boxSize;
   int noOfColumns = boxSize* boxSize;
   // creates master panel
   JPanel mainPanel = new JPanel(new GridLayout(boxSize, boxSize, 1, 1));
@@ -106,39 +108,24 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
       System.out.println();
       System.out.print(i+":");
       for (int j = 0; j < data.size(); j++) {
-        System.out.print(data.get(i).get(j).getNewValue());
+        System.out.print(data.get(i).get(j).getValue());
       }
     }
   }
 
   public void updateData() {
-    Boolean areThereDuplicateValues;
     duplicateValues = createDuplicateValuesArray();
-    System.out.println("======NEW DATA================");
-    
-    // updateGrid();
+    // System.out.println("======NEW DATA================");
     GridCheck.checkAllOuterBoxes(duplicateValues, data);
     GridCheck.checkAllHorizontalRows(boxSize, duplicateValues, data);
     GridCheck.checkAllVerticalColumns(boxSize, duplicateValues, data);
-    areThereDuplicateValues = Solver.areThereDuplicates(duplicateValues);
-    System.out.println("Duplicates: " + areThereDuplicateValues);
+    this.areThereDuplicateValues = Solver.areThereDuplicates(duplicateValues);
+    // System.out.println("Duplicates: " + areThereDuplicateValues);
     Fields.updateFieldColour(duplicateValues, data);
-    printInput();
-    copyData();
+    // printInput();
   }
 
-  public void copyData() {
-    previousData = new ArrayList<ArrayList<String>>();
-    for (int i=0; i<data.size(); i++) {
-      previousData.add(new ArrayList<String>());
-      for (int j = 0; j < data.size(); j++) {
-        previousData.get(i).add(data.get(i).get(j).getNewValue());
-      }
-    }
-    System.out.println(previousData);
-  }
-
-  public ArrayList<ArrayList<Integer>> createDuplicateValuesArray() {
+  public static ArrayList<ArrayList<Integer>> createDuplicateValuesArray() {
     ArrayList<ArrayList<Integer>> duplicateArray;
     duplicateArray = new ArrayList<ArrayList<Integer>>();
     for (int i=0; i<noOfRows; i++) {
@@ -151,7 +138,8 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   public void actionPerformed(ActionEvent e) {
     // System.out.println(this.makePuzzle);
     if (e.getSource() == this.solveButton) {
-      Solver.SolveSudoku();
+      updateData();
+      Solver.SolveSudoku(data, areThereDuplicateValues);
       System.out.println("Solve");
     }
   }
@@ -162,7 +150,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   }
 
   @Override
-    public void removeUpdate(DocumentEvent e) {
+  public void removeUpdate(DocumentEvent e) {
     updateData();
   }
 

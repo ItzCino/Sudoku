@@ -28,7 +28,7 @@ public class Fields {
     for (int i=0; i<duplicateValues.size(); i++) {
       ArrayList<Integer> currentOuterBox;
       currentOuterBox = duplicateValues.get(i);
-      System.out.println(currentOuterBox);
+    //   System.out.println(currentOuterBox);
       Fields.setTextFieldColor(currentOuterBox, i, data);
     }
   }
