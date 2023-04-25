@@ -45,11 +45,18 @@ public class Solver {
         break;
       }
     }
+    int innerBox = 0;
+    int outerBox = 0;
     System.out.println("AREAAAA"+workingOuterBox + ", " + workingInnerBox);
     // outer box
     for (int i = 0; i < boxes; i++) {
       // inner box
       for (int j = 0; j < boxes; j++) {
+        // skips current iteration if there is value found
+        // if (data.get(i).get(j).getValue().equals("") == false) {
+        //   continue;
+        // }
+
         for (int k=1; k<= boxes; k++) {
           workingData.get(workingOuterBox).get(workingInnerBox).setValue(k);
           puzzleSolved = isPuzzleSolved(workingData);
@@ -68,14 +75,43 @@ public class Solver {
             break;
         }
         // incrementor
-        for (int x = 0; x <= i; x++) {
-          for (int y = 0; y <= j; y++) {
+        Boolean breakIncrementor = false;
+        Boolean isSuccessful;
+        for (int x = 0; x <= boxes; x++) {
+          for (int y = 0; y <= boxes; y++) {
             if ((x == workingOuterBox) && (y == workingInnerBox)) {
               continue;
             }
-            workingData.get(x).get(y).plusOne();            
+            // if (workingData.get(x).get(y).getValue().equals("9")) {
+            //   workingData.get(x).get(y).setValue(1);
+            //   continue;
+            // }
+            // if (breakIncrementor == true) {
+            //   workingData.get(x).get(y).plusOne();
+            //   break;
+            // }
+            isSuccessful = workingData.get(x).get(y).plusOne();
+            // if (isSuccessful == false) {
+            //   breakIncrementor = true;
+            // }
+            if (isSuccessful == true) {
+              breakIncrementor = true;
+              break;
+            }  
+          }
+          if (breakIncrementor == true) {
+            break;
           }
         }
+
+        // if ((outerBox == workingOuterBox) && (innerBox == workingInnerBox)) {
+        //   innerBox++;
+        //   if (innerBox == boxes) {
+        //     innerBox = 0;
+        //     outerBox++;
+        //   }
+        // }
+
       }
       if (puzzleSolved == true) {
         break;
