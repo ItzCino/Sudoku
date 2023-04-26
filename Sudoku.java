@@ -50,15 +50,17 @@ public class Sudoku {
     this.value = this.textField.getText();
   }
 
-  public void plusOne() {
-    if (getValue().equals("")) {
-      setValue(1);
-    }
+  public Boolean plusOne() {
+    Boolean isSuccess = true;
     int currentValue = Integer.valueOf(this.value);
-    if (currentValue < 9) {
+    if (currentValue <= 8) {
       currentValue++;
       setValue(currentValue);
+    } else {
+      isSuccess = false;
+      setValue(1);
     }
+    return isSuccess;
   }
 
   public String getValue() {

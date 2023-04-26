@@ -49,9 +49,7 @@ public class Solver {
     int outerBox = 0;
     System.out.println("AREAAAA"+workingOuterBox + ", " + workingInnerBox);
     // outer box
-    for (int i = 0; i < boxes; i++) {
-      // inner box
-      for (int j = 0; j < boxes; j++) {
+    while (puzzleSolved == false) {
         // skips current iteration if there is value found
         // if (data.get(i).get(j).getValue().equals("") == false) {
         //   continue;
@@ -63,12 +61,13 @@ public class Solver {
           if (puzzleSolved == true) {
             break;
           }
+          /*  THIS CODES NEEDS TO BE SPED UP ALOT   */
           System.out.println("Working data: ");
           for (int a = 0; a < boxes; a++) {
             for (int b = 0; b < boxes; b++) {
               System.out.print(workingData.get(a).get(b).getValue());
             }
-            System.out.println();
+            // System.out.println();
           }
         }
         if (puzzleSolved == true) {
@@ -113,14 +112,10 @@ public class Solver {
         // }
 
       }
-      if (puzzleSolved == true) {
-        break;
-      }
+    //   isPuzzleSolved(workingData);
     }
 
-    isPuzzleSolved(workingData);
 
-  }
 
   public static void copyData(ArrayList<ArrayList<Sudoku>> data, ArrayList<ArrayList<Sudoku>> workingData) {
     for (int i=0; i < MyFrame.noOfRows; i++) {
