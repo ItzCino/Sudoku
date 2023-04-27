@@ -37,53 +37,67 @@ public class Solver {
 
     while (puzzleSolved == false) {
         // gets the next empty field
-        if (gridFull == false) {
-          emptyField = nextEmptyField(workingData);
-          workingOuterBox = emptyField.get(0);
-          workingInnerBox = emptyField.get(1);
-          fieldFull = emptyField.get(2);
-        }
-        if (fieldFull == 1) {
-          gridFull = true;
-        }
-        if (gridFull == true) {
-            System.out.println("GRID FULL");
-        }
-        System.out.println(workingOuterBox+", "+workingInnerBox);
-        for (int k=1; k<= boxes; k++) {
-          workingData.get(workingOuterBox).get(workingInnerBox).setValue(k);
-          isThereDuplicates = areThereDuplicatesStandalone(workingData);
-          tempIntegerArray = toIntegerArray(workingData);
+        // if (gridFull == false) {
+        //   emptyField = nextEmptyField(workingData);
+        //   workingOuterBox = emptyField.get(0);
+        //   workingInnerBox = emptyField.get(1);
+        //   fieldFull = emptyField.get(2);
+        // }
+        // if (fieldFull == 1) {
+        //   gridFull = true;
+        // }
+        // if (gridFull == true) {
+        //     System.out.println("GRID FULL");
+        // }
 
-          /////////////////////////////
-          /* THIS CODES NEEDS TO BE SPED UP ALOT */
-          System.out.println("Working data: ");
-          for (int a = 0; a < boxes; a++) {
-            for (int b = 0; b < boxes; b++) {
-              System.out.print(workingData.get(a).get(b).getValue());
-            }
-            System.out.println();
+        Boolean FoundIndex = false;
+      for (int i = 0; i < boxes; i++) {
+        for (int j = 0; j < boxes; j++) {
+          if (workingData.get(i).get(j).getValue().equals("")) {
+            workingOuterBox = i;
+            workingInnerBox = j;
+            fieldFull = 1;
+            FoundIndex = true;
+            break;
           }
-          ///////////////////////////
-
-          if (impossibleSolutions.contains(tempIntegerArray)) {
-            continue;
+        }
+        if (FoundIndex == true) {
+          break;
+        }
+      }
+      System.out.println(workingOuterBox+", "+workingInnerBox);
+      for (int k=1; k<= boxes; k++) {
+        workingData.get(workingOuterBox).get(workingInnerBox).setValue(k);
+        isThereDuplicates = areThereDuplicatesStandalone(workingData);
+        tempIntegerArray = toIntegerArray(workingData);  
+        /////////////////////////////
+        /* THIS CODES NEEDS TO BE SPED UP ALOT */
+        System.out.println("Working data: ");
+        for (int a = 0; a < boxes; a++) {
+          for (int b = 0; b < boxes; b++) {
+            System.out.print(workingData.get(a).get(b).getValue());
           }
-          if (isThereDuplicates == false) {
-            puzzleSolved = isPuzzleSolved(workingData);
-            if (puzzleSolved == true) {
-              break;
-            }
-            possibleSolutions.add(tempIntegerArray);
-            continue;
-            // toSudokuArray(integerData);
+          System.out.println();
+        }
+        ///////////////////////////  
+        if (impossibleSolutions.contains(tempIntegerArray)) {
+          continue;
+        }
+        if (isThereDuplicates == false) {
+          puzzleSolved = isPuzzleSolved(workingData);
+          if (puzzleSolved == true) {
+            break;
           }
-          if (isThereDuplicates == true) {
-            impossibleSolutions.add(tempIntegerArray);
-            toSudokuArray(possibleSolutions.get(possibleSolutions.size()-1), workingData);
-            continue;
-          }
-          
+          possibleSolutions.add(tempIntegerArray);
+          continue;
+          // toSudokuArray(integerData);
+        }
+        if (isThereDuplicates == true) {
+          impossibleSolutions.add(tempIntegerArray);
+          toSudokuArray(possibleSolutions.get(possibleSolutions.size()-1), workingData);
+          continue;
+        }
+        
         }
         if (puzzleSolved == true) {
             break;
