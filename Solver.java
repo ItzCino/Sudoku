@@ -8,15 +8,17 @@ public class Solver {
   // and should not share the same pointer to the original so a copy is made
 
   public static void SolveSudoku(ArrayList<ArrayList<Sudoku>> data, Boolean areThereDuplicates) {
+    Boolean isThereDuplicates;
     Boolean puzzleSolved = false;
     if (areThereDuplicates == true) {
       System.out.println("CANNOT BE SOLVED");
       return;
     }
-
+    ArrayList<ArrayList<ArrayList<Integer>>> possibleSolutions = new ArrayList<ArrayList<ArrayList<Integer>>>();
+    ArrayList<ArrayList<ArrayList<Integer>>> impossibleSolutions = new ArrayList<ArrayList<ArrayList<Integer>>>();
     ArrayList<ArrayList<Sudoku>> workingData = new ArrayList<ArrayList<Sudoku>>();
     copyData(data, workingData);
-    setFieldsToOne(workingData);
+    // setFieldsToOne(workingData);
     /*
      * try every combination to sudoku puzzle
      * if it is valid, then it is solved
@@ -25,18 +27,104 @@ public class Solver {
      * if it is solved, then return the solved puzzle
      */
     int boxes = MyFrame.noOfRows;
-    int endIndex = boxes - 1;
+    ArrayList<ArrayList<Integer>> tempIntegerArray;
     // outer box
+    ArrayList<Integer> emptyField= new ArrayList<>();
+    int workingOuterBox = 0 ;
+    int workingInnerBox = 0;
+    int fieldFull = 0;
+    Boolean gridFull = false;
+
+    while (puzzleSolved == false) {
+        // gets the next empty field
+        if (gridFull == false) {
+          emptyField = nextEmptyField(workingData);
+          workingOuterBox = emptyField.get(0);
+          workingInnerBox = emptyField.get(1);
+          fieldFull = emptyField.get(2);
+        }
+        if (fieldFull == 1) {
+          gridFull = true;
+        }
+        if (gridFull == true) {
+            System.out.println("GRID FULL");
+        }
+        System.out.println(workingOuterBox+", "+workingInnerBox);
+        for (int k=1; k<= boxes; k++) {
+          workingData.get(workingOuterBox).get(workingInnerBox).setValue(k);
+          isThereDuplicates = areThereDuplicatesStandalone(workingData);
+          tempIntegerArray = toIntegerArray(workingData);
+
+          /////////////////////////////
+          /* THIS CODES NEEDS TO BE SPED UP ALOT */
+          System.out.println("Working data: ");
+          for (int a = 0; a < boxes; a++) {
+            for (int b = 0; b < boxes; b++) {
+              System.out.print(workingData.get(a).get(b).getValue());
+            }
+            System.out.println();
+          }
+          ///////////////////////////
+
+          if (impossibleSolutions.contains(tempIntegerArray)) {
+            continue;
+          }
+          if (isThereDuplicates == false) {
+            puzzleSolved = isPuzzleSolved(workingData);
+            if (puzzleSolved == true) {
+              break;
+            }
+            possibleSolutions.add(tempIntegerArray);
+            continue;
+            // toSudokuArray(integerData);
+          }
+          if (isThereDuplicates == true) {
+            impossibleSolutions.add(tempIntegerArray);
+            toSudokuArray(possibleSolutions.get(possibleSolutions.size()-1), workingData);
+            continue;
+          }
+          
+        }
+        if (puzzleSolved == true) {
+            break;
+        }
+      }
+    //   isPuzzleSolved(workingData);
+  }
+
+  public static ArrayList<ArrayList<Integer>> toIntegerArray(ArrayList<ArrayList<Sudoku>> workingData) {
+    ArrayList<ArrayList<Integer>> integerData = new ArrayList<ArrayList<Integer>>();
+    for (int i=0; i < MyFrame.noOfRows; i++) {
+      integerData.add(new ArrayList<Integer>());
+      for (int j = 0; j < MyFrame.noOfRows; j++) {
+        integerData.get(i).add(j, workingData.get(i).get(j).getValueInt());
+      }
+    }
+    return integerData;
+  }
+
+  public static void toSudokuArray(ArrayList<ArrayList<Integer>> integerData, ArrayList<ArrayList<Sudoku>> workingData) {
+    for (int i=0; i < MyFrame.noOfRows; i++) {
+      for (int j = 0; j < MyFrame.noOfRows; j++) {
+        workingData.get(i).get(j).setValue(integerData.get(i).get(j));
+      }
+    }
+  }
+
+  public static ArrayList<Integer> nextEmptyField(ArrayList<ArrayList<Sudoku>> workingData){
+    // gets the next empty 
+    int boxes = MyFrame.noOfRows;
     int workingOuterBox = 0;
     int workingInnerBox = 0;
-
-    // gets the next empty field
+    int fieldFull = 0;
+    ArrayList<Integer> emptyFields = new ArrayList<Integer>();
     Boolean FoundIndex = false;
     for (int i = 0; i < boxes; i++) {
       for (int j = 0; j < boxes; j++) {
         if (workingData.get(i).get(j).getValue().equals("")) {
           workingOuterBox = i;
           workingInnerBox = j;
+          fieldFull = 1;
           FoundIndex = true;
           break;
         }
@@ -45,75 +133,12 @@ public class Solver {
         break;
       }
     }
-    int innerBox = 0;
-    int outerBox = 0;
-    System.out.println("AREAAAA"+workingOuterBox + ", " + workingInnerBox);
-    // outer box
-    while (puzzleSolved == false) {
-        // skips current iteration if there is value found
-        // if (data.get(i).get(j).getValue().equals("") == false) {
-        //   continue;
-        // }
+    emptyFields.add(workingOuterBox);
+    emptyFields.add(workingInnerBox);
+    emptyFields.add(fieldFull);
 
-        for (int k=1; k<= boxes; k++) {
-          workingData.get(workingOuterBox).get(workingInnerBox).setValue(k);
-          puzzleSolved = isPuzzleSolved(workingData);
-          if (puzzleSolved == true) {
-            break;
-          }
-          /*  THIS CODES NEEDS TO BE SPED UP ALOT   */
-          System.out.println("Working data: ");
-          for (int a = 0; a < boxes; a++) {
-            for (int b = 0; b < boxes; b++) {
-              System.out.print(workingData.get(a).get(b).getValue());
-            }
-            // System.out.println();
-          }
-        }
-        if (puzzleSolved == true) {
-            break;
-        }
-        // incrementor
-        Boolean breakIncrementor = false;
-        Boolean isSuccessful;
-        for (int x = 0; x <= boxes; x++) {
-          for (int y = 0; y <= boxes; y++) {
-            if ((x == workingOuterBox) && (y == workingInnerBox)) {
-              continue;
-            }
-            // if (workingData.get(x).get(y).getValue().equals("9")) {
-            //   workingData.get(x).get(y).setValue(1);
-            //   continue;
-            // }
-            // if (breakIncrementor == true) {
-            //   workingData.get(x).get(y).plusOne();
-            //   break;
-            // }
-            isSuccessful = workingData.get(x).get(y).plusOne();
-            // if (isSuccessful == false) {
-            //   breakIncrementor = true;
-            // }
-            if (isSuccessful == true) {
-              breakIncrementor = true;
-              break;
-            }  
-          }
-          if (breakIncrementor == true) {
-            break;
-          }
-        }
-
-        // if ((outerBox == workingOuterBox) && (innerBox == workingInnerBox)) {
-        //   innerBox++;
-        //   if (innerBox == boxes) {
-        //     innerBox = 0;
-        //     outerBox++;
-        //   }
-        // }
-
-      }
-    //   isPuzzleSolved(workingData);
-    }
+    return emptyFields;
+  }
 
 
 
@@ -185,6 +210,17 @@ public class Solver {
       }
     }
     return duplicates;
+  }
+
+  public static Boolean areThereDuplicatesStandalone(ArrayList<ArrayList<Sudoku>> data) {
+    ArrayList<ArrayList<Integer>> duplicateValues;
+    duplicateValues = MyFrame.createDuplicateValuesArray();
+    // System.out.println("======NEW DATA================");
+    GridCheck.checkAllOuterBoxes(duplicateValues, data);
+    GridCheck.checkAllHorizontalRows(MyFrame.boxSize, duplicateValues, data);
+    GridCheck.checkAllVerticalColumns(MyFrame.boxSize, duplicateValues, data);
+    Boolean areThereDuplicateValues = Solver.areThereDuplicates(duplicateValues);
+    return areThereDuplicateValues;  
   }
 
   public static Boolean areThereDuplicates(ArrayList<ArrayList<Integer>> duplicateValues) {

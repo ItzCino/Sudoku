@@ -140,6 +140,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     if (e.getSource() == this.solveButton) {
       updateData();
       Solver.SolveSudoku(data, areThereDuplicateValues);
+      updateData();
       System.out.println("Solve");
     }
   }

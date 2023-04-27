@@ -43,29 +43,30 @@ public class Sudoku {
   }
 
   public void setValue(int text) {
+    if (text == 0) {
+      this.textField.setText("");
+      this.value = "";
+      return;
+    }
     this.textField.setText(Integer.toString(text));
+    this.value = Integer.toString(text);
   }
 
   public void updateValue() {
     this.value = this.textField.getText();
   }
 
-  public Boolean plusOne() {
-    Boolean isSuccess = true;
-    int currentValue = Integer.valueOf(this.value);
-    if (currentValue <= 8) {
-      currentValue++;
-      setValue(currentValue);
-    } else {
-      isSuccess = false;
-      setValue(1);
-    }
-    return isSuccess;
-  }
-
   public String getValue() {
     updateValue();
     return this.value;
+  }
+
+  public int getValueInt() {
+    updateValue();
+    if (this.value.equals("")) {
+      return 0;
+    }
+    return Integer.parseInt(this.value);
   }
 
   public String getInnerBoxIDStr() {
