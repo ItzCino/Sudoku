@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.util.ArrayList;
 
 public class Solver {
@@ -29,34 +30,17 @@ public class Solver {
     int boxes = MyFrame.noOfRows;
     ArrayList<ArrayList<Integer>> tempIntegerArray;
     // outer box
-    ArrayList<Integer> emptyField= new ArrayList<>();
     int workingOuterBox = 0 ;
     int workingInnerBox = 0;
-    int fieldFull = 0;
-    Boolean gridFull = false;
 
     while (puzzleSolved == false) {
-        // gets the next empty field
-        // if (gridFull == false) {
-        //   emptyField = nextEmptyField(workingData);
-        //   workingOuterBox = emptyField.get(0);
-        //   workingInnerBox = emptyField.get(1);
-        //   fieldFull = emptyField.get(2);
-        // }
-        // if (fieldFull == 1) {
-        //   gridFull = true;
-        // }
-        // if (gridFull == true) {
-        //     System.out.println("GRID FULL");
-        // }
-
-        Boolean FoundIndex = false;
+      Boolean FoundIndex = false;
       for (int i = 0; i < boxes; i++) {
         for (int j = 0; j < boxes; j++) {
-          if (workingData.get(i).get(j).getValue().equals("")) {
+          Sudoku tempSudoku = workingData.get(i).get(j);
+          if (tempSudoku.getValue().equals("")) {
             workingOuterBox = i;
             workingInnerBox = j;
-            fieldFull = 1;
             FoundIndex = true;
             break;
           }
@@ -65,14 +49,15 @@ public class Solver {
           break;
         }
       }
-      System.out.println(workingOuterBox+", "+workingInnerBox);
       for (int k=1; k<= boxes; k++) {
         workingData.get(workingOuterBox).get(workingInnerBox).setValue(k);
         isThereDuplicates = areThereDuplicatesStandalone(workingData);
         tempIntegerArray = toIntegerArray(workingData);  
+        System.out.println(isThereDuplicates);
         /////////////////////////////
         /* THIS CODES NEEDS TO BE SPED UP ALOT */
         System.out.println("Working data: ");
+        System.out.println(workingOuterBox + ", " + workingOuterBox);
         for (int a = 0; a < boxes; a++) {
           for (int b = 0; b < boxes; b++) {
             System.out.print(workingData.get(a).get(b).getValue());
@@ -89,13 +74,13 @@ public class Solver {
             break;
           }
           possibleSolutions.add(tempIntegerArray);
-          continue;
           // toSudokuArray(integerData);
         }
         if (isThereDuplicates == true) {
           impossibleSolutions.add(tempIntegerArray);
-          toSudokuArray(possibleSolutions.get(possibleSolutions.size()-1), workingData);
-          continue;
+        //   removeDuplicates(workingData);
+          toSudokuArray(possibleSolutions.get(possibleSolutions.size() - 1), workingData);
+
         }
         
         }
@@ -104,6 +89,24 @@ public class Solver {
         }
       }
     //   isPuzzleSolved(workingData);
+  }
+
+  public static void removeDuplicates(ArrayList<ArrayList<Sudoku>> workingData) {
+    // remove duplicates from workingData
+    int size = workingData.size();
+    int counter = 0;
+    for (int i = 0; i<size; i++) {
+      for (int j = 0; j<size; j++) {
+        Color fieldColor = workingData.get(i).get(j).getFieldColour();
+        System.out.println(fieldColor.equals(Color.RED) + ", " + fieldColor + ", " + Color.RED);
+        if (fieldColor.equals(Color.RED)) {
+          workingData.get(i).get(j).setValue(0);
+          workingData.get(i).get(j).setWhiteField();
+          counter++;
+        }
+      }
+    }
+    System.out.println("No. of dupliates: " + counter);
   }
 
   public static ArrayList<ArrayList<Integer>> toIntegerArray(ArrayList<ArrayList<Sudoku>> workingData) {

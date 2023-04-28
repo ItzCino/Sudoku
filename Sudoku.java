@@ -9,8 +9,6 @@ public class Sudoku {
     
   String value = "";
 
-  Boolean editable = true;
-
   int row;
   int column;
   int innerRow;
@@ -32,14 +30,6 @@ public class Sudoku {
     this.outerBoxID = outerBoxNumber;
     this.innerBoxID = innerBoxNumber;
     this.textField = textField;
-  }
-
-  public void setEditable(Boolean immutability) {
-    this.editable = immutability;
-  }
-
-  public Boolean getImmutability() {
-    return this.editable;
   }
 
   public void setValue(int text) {
@@ -85,12 +75,16 @@ public class Sudoku {
       return this.outerBoxID;
   }
 
+  public Color getFieldColour() {
+    return this.textField.getBackground();
+  }
+
   public void setRedField() {
     this.textField.setBackground(Color.RED);
   }
 
   public void setWhiteField() {
-      this.textField.setBackground(Color.WHITE);
+    this.textField.setBackground(Color.WHITE);
   }
 
   public static ArrayList<Sudoku> getBoxDuplicates(ArrayList<Sudoku> outerBox, int outerBoxNumber) {
