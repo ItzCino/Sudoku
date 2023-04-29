@@ -15,10 +15,12 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   // new GUI window to add components to
   JButton solveButton;
+  JButton addPuzzle;
   ArrayList<JTextField> textFields = new ArrayList<JTextField>();
 
   Boolean areThereDuplicateValues;
@@ -81,8 +83,12 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     this.solveButton = new JButton("Solve");
     this.solveButton.addActionListener(this);
 
+    this.addPuzzle = new JButton("Add Puzzle");
+    this.addPuzzle.addActionListener(this);
+
     JPanel solvePanel = new JPanel();
     solvePanel.add(this.solveButton);
+    solvePanel.add(this.addPuzzle);
 
     JSplitPane masterPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mainPanel, solvePanel);
     masterPanel.setDividerLocation(750);
@@ -142,6 +148,24 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
       Solver.SolveSudoku(data, areThereDuplicateValues);
       updateData();
       System.out.println("Solve");
+    }
+
+    if (e.getSource() == this.addPuzzle) {
+      System.out.println("Loaded puzzle");
+      ArrayList<ArrayList<Integer>> puzzle = new ArrayList<ArrayList<Integer>>();
+      puzzle.add(new ArrayList<Integer>(Arrays.asList(9, 4, 2, 5, 3, 6, 8, 7 , 1)));
+      puzzle.add(new ArrayList<Integer>(Arrays.asList(1, 6, 3, 2, 8, 7, 9, 5, 4)));
+      puzzle.add(new ArrayList<Integer>(Arrays.asList(8, 5, 7, 9, 4, 1, 2, 3 , 6)));
+  
+      puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0)));
+      puzzle.add(new ArrayList<Integer>(Arrays.asList( 8, 1, 9, 3, 2, 6, 7, 4, 5)));
+      puzzle.add(new ArrayList<Integer>(Arrays.asList(4, 6, 5, 7, 9, 8, 1, 2, 3)));
+  
+      puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0)));
+      puzzle.add(new ArrayList<Integer>(Arrays.asList(4, 7, 1, 6, 3, 2, 5, 9, 8)));
+      puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0)));
+      Solver.toSudokuArray(puzzle, data);
+      updateData();
     }
   }
 

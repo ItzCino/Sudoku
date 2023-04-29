@@ -17,8 +17,10 @@ public class Solver {
     }
     ArrayList<ArrayList<ArrayList<Integer>>> possibleSolutions = new ArrayList<ArrayList<ArrayList<Integer>>>();
     ArrayList<ArrayList<ArrayList<Integer>>> impossibleSolutions = new ArrayList<ArrayList<ArrayList<Integer>>>();
+    ArrayList<ArrayList<Integer>> initalArray = new ArrayList<ArrayList<Integer>>();
     ArrayList<ArrayList<Sudoku>> workingData = new ArrayList<ArrayList<Sudoku>>();
     copyData(data, workingData);
+    initalArray = toIntegerArray(workingData);
     // setFieldsToOne(workingData);
     /*
      * try every combination to sudoku puzzle
@@ -32,13 +34,16 @@ public class Solver {
     // outer box
     int workingOuterBox = 0 ;
     int workingInnerBox = 0;
-
+    int backtrackcounter = 1;
     while (puzzleSolved == false) {
+        if ((workingOuterBox == 8) && (workingInnerBox == 2)) {
+            System.out.println("8,2");
+        }
       Boolean FoundIndex = false;
       for (int i = 0; i < boxes; i++) {
         for (int j = 0; j < boxes; j++) {
           Sudoku tempSudoku = workingData.get(i).get(j);
-          if (tempSudoku.getValue().equals("")) {
+          if (tempSudoku.getValueInt() == 0) {
             workingOuterBox = i;
             workingInnerBox = j;
             FoundIndex = true;
@@ -49,6 +54,31 @@ public class Solver {
           break;
         }
       }
+      System.out.println("Found index:" + FoundIndex); 
+      // if no index is found, then set the next index to be a duplicate field
+      if (FoundIndex == false) {
+        Boolean FoundDuplicate = false;
+        for (int i = 0; i < boxes; i++) {
+          for (int j = 0; j < boxes; j++) {
+            Sudoku tempSudoku = workingData.get(i).get(j);
+            if (tempSudoku.getFieldColour().equals(Color.RED)) {
+              workingOuterBox = i;
+              workingInnerBox = j;
+              FoundDuplicate = true;
+              break;
+            }
+          }
+          if (FoundDuplicate == true) {
+            break;
+          }
+        }
+        System.out.println("Backtrackcounter: " + backtrackcounter);
+        toSudokuArray(possibleSolutions.get(possibleSolutions.size() - 1), workingData);
+        System.out.println(possibleSolutions.get(possibleSolutions.size() - 1));
+        continue;
+      }
+      
+      int duplicates = 0;
       for (int k=1; k<= boxes; k++) {
         workingData.get(workingOuterBox).get(workingInnerBox).setValue(k);
         isThereDuplicates = areThereDuplicatesStandalone(workingData);
@@ -57,41 +87,75 @@ public class Solver {
         /////////////////////////////
         /* THIS CODES NEEDS TO BE SPED UP ALOT */
         System.out.println("Working data: ");
-        System.out.println(workingOuterBox + ", " + workingOuterBox);
-        for (int a = 0; a < boxes; a++) {
-          for (int b = 0; b < boxes; b++) {
-            System.out.print(workingData.get(a).get(b).getValue());
+        System.out.println(workingOuterBox + ", " + workingInnerBox);
+        // for (int a = 0; a < boxes; a++) {
+        //   for (int b = 0; b < boxes; b++) {
+        //     System.out.print(workingData.get(a).get(b).getValueInt());
+        //   }
+        //   System.out.println();
+        // }
+        // PRINTING _>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        int boxSize = MyFrame.boxSize;
+        int outerLow = 0;
+        int outerHigh = boxSize;
+        for (int i=0 ; i<boxSize; i++) {
+          ArrayList<Sudoku> row;
+    
+          int innerLow = 0;
+          int innerHigh = boxSize;
+          for (int j=0; j<boxSize; j++) {
+            row = Sudoku.getHorizontalRow(outerLow, outerHigh, innerLow, innerHigh, data);
+            for (int a = 0; a < boxes; a++) {
+              System.out.print(row.get(a).getValueInt());
+            }
+            System.out.println();
+            innerLow += boxSize;
+            innerHigh += boxSize;
           }
-          System.out.println();
+          outerLow += boxSize;
+          outerHigh += boxSize;
         }
+        // PRINTING _>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+        System.out.println("Backtrackcounter: " + backtrackcounter);
+        System.out.println("Duplicates: " + duplicates);
+    
         ///////////////////////////  
+        
         if (impossibleSolutions.contains(tempIntegerArray)) {
+          duplicates++;
           continue;
         }
         if (isThereDuplicates == false) {
           puzzleSolved = isPuzzleSolved(workingData);
+          possibleSolutions.add(tempIntegerArray);
           if (puzzleSolved == true) {
             break;
           }
-          possibleSolutions.add(tempIntegerArray);
-          // toSudokuArray(integerData);
+          backtrackcounter = 0;
         }
         if (isThereDuplicates == true) {
           impossibleSolutions.add(tempIntegerArray);
-        //   removeDuplicates(workingData);
-          toSudokuArray(possibleSolutions.get(possibleSolutions.size() - 1), workingData);
-
+          duplicates++;
+          continue;
+        }
+        }
+        // add backtrackcounter
+        if (duplicates == 9) {
+        //   removeOneDuplicate(workingData);
+          backtrackcounter++;
+        //   System.out.println("Backtrackcounter: " + backtrackcounter);
+          toSudokuArray(possibleSolutions.get(possibleSolutions.size() - backtrackcounter), workingData);
         }
         
-        }
         if (puzzleSolved == true) {
             break;
         }
-      }
+    }
     //   isPuzzleSolved(workingData);
   }
 
-  public static void removeDuplicates(ArrayList<ArrayList<Sudoku>> workingData) {
+  public static void removeOneDuplicate(ArrayList<ArrayList<Sudoku>> workingData) {
     // remove duplicates from workingData
     int size = workingData.size();
     int counter = 0;
@@ -104,6 +168,12 @@ public class Solver {
           workingData.get(i).get(j).setWhiteField();
           counter++;
         }
+        if (counter == 1) {
+          break;
+        }
+      }
+      if (counter == 1) {
+        break;
       }
     }
     System.out.println("No. of dupliates: " + counter);
