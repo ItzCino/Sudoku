@@ -102,11 +102,10 @@ public class Solver {
 	for (int row = 0; row < GRID_SIZE; row++) {
 	  for (int column = 0; column < GRID_SIZE; column++) {
 	    if (board[row][column] == 0) {
-        Boolean fitted = false;
 	      for (int numberToTry = 1; numberToTry <= GRID_SIZE; numberToTry++) {
 	        if (isValidPlacement(board, numberToTry, row, column)) {
 	          board[row][column] = numberToTry;
-              fitted = true;
+            //   printCurrentSolution(board);
 	          if (solveBoard(board)) {
                 return true;
               } else {
@@ -114,12 +113,11 @@ public class Solver {
               }
 	        }
 	      }
-	      if (!fitted) {
-            return false;
-          }
+        return false;
 	    } 
 	  }
 	}
+    printCurrentSolution(board);
 	return true;
 	}
 
@@ -176,6 +174,16 @@ public class Solver {
     for (int i=0; i<workingData.size(); i++) {
       for (int j=0; j<workingData.get(i).size(); j++) {
         System.out.print(workingData.get(i).get(j).getValueInt());
+      }
+      System.out.println();
+    }
+  }
+
+  public static void printCurrentSolution(int[][] Current) {
+    System.out.println("======CURRENT SOLUTION================");
+    for (int i = 0; i < GRID_SIZE; i++) {
+      for (int j = 0; j < GRID_SIZE; j++) {
+        System.out.print(Current[i][j]);
       }
       System.out.println();
     }

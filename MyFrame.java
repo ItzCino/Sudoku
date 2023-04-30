@@ -21,6 +21,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   // new GUI window to add components to
   JButton solveButton;
   JButton addPuzzle;
+  JButton resetPuzzle;
   ArrayList<JTextField> textFields = new ArrayList<JTextField>();
 
   Boolean areThereDuplicateValues;
@@ -86,9 +87,13 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     this.addPuzzle = new JButton("Add Puzzle");
     this.addPuzzle.addActionListener(this);
 
+    this.resetPuzzle = new JButton("Clear Puzzle");
+    this.resetPuzzle.addActionListener(this);
+
     JPanel solvePanel = new JPanel();
     solvePanel.add(this.solveButton);
     solvePanel.add(this.addPuzzle);
+    solvePanel.add(this.resetPuzzle);
 
     JSplitPane masterPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mainPanel, solvePanel);
     masterPanel.setDividerLocation(750);
@@ -150,20 +155,41 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
       System.out.println("Solve Button Pressed");
     }
 
+    if (e.getSource() == this.resetPuzzle) {
+      for (int i=0; i<data.size(); i++) {
+        for (int j = 0; j < data.size(); j++) {
+          data.get(i).get(j).setValue(0);
+        }
+      }
+      System.out.println("Reset Puzzle Pressed");
+    }
+
     if (e.getSource() == this.addPuzzle) {
       System.out.println("Loaded puzzle");
       ArrayList<ArrayList<Integer>> puzzle = new ArrayList<ArrayList<Integer>>();
-      puzzle.add(new ArrayList<Integer>(Arrays.asList(9, 4, 2, 5, 3, 6, 8, 7, 1)));
-      puzzle.add(new ArrayList<Integer>(Arrays.asList(1, 6, 3, 2, 8, 7, 9, 5, 4)));
-      puzzle.add(new ArrayList<Integer>(Arrays.asList(8, 5, 7, 9, 4, 1, 2, 3, 6)));
+    //   puzzle.add(new ArrayList<Integer>(Arrays.asList(9, 4, 2, 5, 3, 6, 8, 7, 1)));
+    //   puzzle.add(new ArrayList<Integer>(Arrays.asList(1, 6, 3, 2, 8, 7, 9, 5, 4)));
+    //   puzzle.add(new ArrayList<Integer>(Arrays.asList(8, 5, 7, 9, 4, 1, 2, 3, 6)));
   
-      puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0)));
-      puzzle.add(new ArrayList<Integer>(Arrays.asList(8, 1, 9, 3, 2, 6, 7, 4, 5)));
-      puzzle.add(new ArrayList<Integer>(Arrays.asList(4, 6, 5, 7, 9, 8, 1, 2, 3)));
+    //   puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0)));
+    //   puzzle.add(new ArrayList<Integer>(Arrays.asList(8, 1, 9, 3, 2, 6, 7, 4, 5)));
+    //   puzzle.add(new ArrayList<Integer>(Arrays.asList(4, 6, 5, 7, 9, 8, 1, 2, 3)));
   
-      puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0)));
-      puzzle.add(new ArrayList<Integer>(Arrays.asList(4, 7, 1, 6, 3, 2, 5, 9, 8)));
-      puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0)));
+    //   puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0)));
+    //   puzzle.add(new ArrayList<Integer>(Arrays.asList(4, 7, 1, 6, 3, 2, 5, 9, 8)));
+    //   puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0)));
+
+    puzzle.add(new ArrayList<Integer>(Arrays.asList(7, 0, 2, 0, 0, 0, 1, 0, 0)));
+    puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 5, 0, 0, 0, 3, 0, 0, 9)));
+    puzzle.add(new ArrayList<Integer>(Arrays.asList(6, 0, 0, 0, 0, 0, 5, 0, 0)));
+
+    puzzle.add(new ArrayList<Integer>(Arrays.asList(8, 0, 0, 0, 4, 3, 0, 9, 0)));
+    puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0)));
+    puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 9, 0, 7, 5, 0, 0, 0, 8)));
+
+    puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 9, 0, 0, 0, 0, 0, 7)));
+    puzzle.add(new ArrayList<Integer>(Arrays.asList(7, 0, 0, 2, 0, 0, 0, 4, 0)));
+    puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 5, 0, 0, 0, 2, 0, 3)));
       Solver.toSudokuArray(puzzle, data);
       updateData();
     }
