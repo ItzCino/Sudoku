@@ -4,10 +4,11 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 
-public class Test extends JFrame {
+// This is some testing code I developed to test the functionality of the text fields.
+public class Testing extends JFrame {
   JTextField text = new JTextField("Press Return", 40);
 
-  public Test() {
+  public Testing() {
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     text.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -20,6 +21,6 @@ public class Test extends JFrame {
   }
 
   public static void main(String[] args) {
-    new Test().setVisible(true);
+    new Testing().setVisible(true);
   }
 }
