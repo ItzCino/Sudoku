@@ -26,27 +26,34 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
 
   Boolean areThereDuplicateValues;
 
+  // initialises variables
   static int boxSize = 3; // 3x3 grid
-  int noOfTextFields = boxSize* boxSize*boxSize;
   static int noOfRows = boxSize*boxSize;
   static int noOfColumns = boxSize* boxSize;
+  int noOfTextFields = boxSize* boxSize*boxSize;
+
   // creates master panel
   JPanel mainPanel = new JPanel(new GridLayout(boxSize, boxSize, 1, 1));
   // creates a 3x3 cluster of pannels
   JPanel[][] panels = new JPanel[boxSize][boxSize];
   int[][] sudokuData = new int[noOfRows][noOfColumns];
+
+  // creates a 2D, holding the current and previous data.
   ArrayList<ArrayList<Sudoku>> data = new ArrayList<ArrayList<Sudoku>>();
   ArrayList<ArrayList<String>> previousData = new ArrayList<ArrayList<String>>();
   // EACH ROW REPRESENTS EACH OUTER BOX
   ArrayList<ArrayList<Integer>> duplicateValues;
 
+  // Main window / frame
   public MyFrame() {
-    this.setTitle("Susdoku");  // sets title of window
+    // sets title of window, size, location, name and functions for the window.
+    this.setTitle("Sudoku");  // sets title of window
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // exits program when window is closed
     this.setResizable(false);  // prevents window from being resized
     this.setSize(900, 800);
     this.setLocation(750, 175);
 
+    // Sets up all the text fields, boxes, panels and listeners to the game "panel"
     int boxCounter = 0;
     for (int row = 0; row < boxSize; row++) {
       for (int col = 0; col < boxSize; col++) {
@@ -77,24 +84,25 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     ImageIcon windowIcon = new ImageIcon("sus.png");
     this.setIconImage(windowIcon.getImage());
 
-    // button = new JButton("press_me");
-    // button.addActionListener(this);    
-    // this.add(button);
-
+    // Adds "Solve" button to window
     this.solveButton = new JButton("Solve");
     this.solveButton.addActionListener(this);
 
+    // Adds "Add Puzzle" button to window
     this.addPuzzle = new JButton("Add Puzzle");
     this.addPuzzle.addActionListener(this);
 
+    // Adds "Clear Puzzle" button to window
     this.resetPuzzle = new JButton("Clear Puzzle");
     this.resetPuzzle.addActionListener(this);
 
+    // Adds buttons from above to a "panel"
     JPanel solvePanel = new JPanel();
     solvePanel.add(this.solveButton);
     solvePanel.add(this.addPuzzle);
     solvePanel.add(this.resetPuzzle);
 
+    // Combines the "game" and "buttons" pannels into the "master" panel
     JSplitPane masterPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mainPanel, solvePanel);
     masterPanel.setDividerLocation(750);
     mainPanel.setMinimumSize(new Dimension(750, 750));
@@ -102,6 +110,8 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     this.setVisible(true); // makes window visible
   }
 
+  // creates a text field which is used to store the user's input.
+  // This is initialised to be an Empty String.
   public JTextField createTextField() {
     JTextField text = new JTextField("");
     text.setPreferredSize(new Dimension(80, 80));
@@ -114,7 +124,6 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
   
   // displays stored text
   public void printInput() {
-    System.out.println("\nEACH ROW REPRESENTS EACH BOX");
     for (int i=0; i<data.size(); i++) {
       System.out.println();
       System.out.print(i+":");
@@ -124,18 +133,19 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     }
   }
 
+  // Updates the data in the 2D array list
+  // Checks for duplicates values and updates the colour of the text fields
   public void updateData() {
     duplicateValues = createDuplicateValuesArray();
-    // System.out.println("======NEW DATA================");
     GridCheck.checkAllOuterBoxes(duplicateValues, data);
     GridCheck.checkAllHorizontalRows(boxSize, duplicateValues, data);
     GridCheck.checkAllVerticalColumns(boxSize, duplicateValues, data);
     this.areThereDuplicateValues = Solver.areThereDuplicates(duplicateValues);
-    // System.out.println("Duplicates: " + areThereDuplicateValues);
     Fields.updateFieldColour(duplicateValues, data);
-    // printInput();
   }
 
+  // Creates a 2D array list of array lists of integers so they can be used to store duplicate values
+  // This is so that the user input is convert to a integer so each element in each box can be compared.
   public static ArrayList<ArrayList<Integer>> createDuplicateValuesArray() {
     ArrayList<ArrayList<Integer>> duplicateArray;
     duplicateArray = new ArrayList<ArrayList<Integer>>();
@@ -145,9 +155,10 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
     return duplicateArray;
   }
   
+  // Listens for when presses any one of the buttons in the panels.
   @Override
   public void actionPerformed(ActionEvent e) {
-    // System.out.println(this.makePuzzle);
+    // If the solve button is pressed the solved puzzle is displayed.
     if (e.getSource() == this.solveButton) {
       updateData();
       Solver.SolveSudoku(data, areThereDuplicateValues);
@@ -155,6 +166,7 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
       System.out.println("Solve Button Pressed");
     }
 
+    // If the reset button is pressed the puzzle is reset to its original state.
     if (e.getSource() == this.resetPuzzle) {
       for (int i=0; i<data.size(); i++) {
         for (int j = 0; j < data.size(); j++) {
@@ -164,37 +176,30 @@ public class MyFrame extends JFrame implements ActionListener, DocumentListener{
       System.out.println("Reset Puzzle Pressed");
     }
 
+    // If the add puzzle button is pressed the puzzle is loaded.
+    // This is a hard coded puzzle from testing purposes
+    // This will be replaced with a randomiser puzzle when I have time.
     if (e.getSource() == this.addPuzzle) {
       System.out.println("Loaded puzzle");
       ArrayList<ArrayList<Integer>> puzzle = new ArrayList<ArrayList<Integer>>();
-    //   puzzle.add(new ArrayList<Integer>(Arrays.asList(9, 4, 2, 5, 3, 6, 8, 7, 1)));
-    //   puzzle.add(new ArrayList<Integer>(Arrays.asList(1, 6, 3, 2, 8, 7, 9, 5, 4)));
-    //   puzzle.add(new ArrayList<Integer>(Arrays.asList(8, 5, 7, 9, 4, 1, 2, 3, 6)));
   
-    //   puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0)));
-    //   puzzle.add(new ArrayList<Integer>(Arrays.asList(8, 1, 9, 3, 2, 6, 7, 4, 5)));
-    //   puzzle.add(new ArrayList<Integer>(Arrays.asList(4, 6, 5, 7, 9, 8, 1, 2, 3)));
+      puzzle.add(new ArrayList<Integer>(Arrays.asList(7, 0, 2, 0, 0, 0, 1, 0, 0)));
+      puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 5, 0, 0, 0, 3, 0, 0, 9)));
+      puzzle.add(new ArrayList<Integer>(Arrays.asList(6, 0, 0, 0, 0, 0, 5, 0, 0)));
   
-    //   puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0)));
-    //   puzzle.add(new ArrayList<Integer>(Arrays.asList(4, 7, 1, 6, 3, 2, 5, 9, 8)));
-    //   puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0)));
-
-    puzzle.add(new ArrayList<Integer>(Arrays.asList(7, 0, 2, 0, 0, 0, 1, 0, 0)));
-    puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 5, 0, 0, 0, 3, 0, 0, 9)));
-    puzzle.add(new ArrayList<Integer>(Arrays.asList(6, 0, 0, 0, 0, 0, 5, 0, 0)));
-
-    puzzle.add(new ArrayList<Integer>(Arrays.asList(8, 0, 0, 0, 4, 3, 0, 9, 0)));
-    puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0)));
-    puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 9, 0, 7, 5, 0, 0, 0, 8)));
-
-    puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 9, 0, 0, 0, 0, 0, 7)));
-    puzzle.add(new ArrayList<Integer>(Arrays.asList(7, 0, 0, 2, 0, 0, 0, 4, 0)));
-    puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 5, 0, 0, 0, 2, 0, 3)));
+      puzzle.add(new ArrayList<Integer>(Arrays.asList(8, 0, 0, 0, 4, 3, 0, 9, 0)));
+      puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0)));
+      puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 9, 0, 7, 5, 0, 0, 0, 8)));
+  
+      puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 9, 0, 0, 0, 0, 0, 7)));
+      puzzle.add(new ArrayList<Integer>(Arrays.asList(7, 0, 0, 2, 0, 0, 0, 4, 0)));
+      puzzle.add(new ArrayList<Integer>(Arrays.asList(0, 0, 5, 0, 0, 0, 2, 0, 3)));
       Solver.toSudokuArray(puzzle, data);
       updateData();
     }
   }
 
+  // Dummy functions for the document listener  
   @Override
   public void insertUpdate(DocumentEvent e) {   
     updateData();

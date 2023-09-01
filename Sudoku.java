@@ -3,10 +3,11 @@ import java.util.ArrayList;
 
 import javax.swing.JTextField;
 
+// Sudoku class
 public class Sudoku {
 
+  // instance variables
   JTextField textField;
-    
   String value = "";
 
   int row;
@@ -16,6 +17,7 @@ public class Sudoku {
   int outerBoxID;
   int innerBoxID;
 
+  // constructor
   public Sudoku(int row, 
                 int column, 
                 int innerRow, 
@@ -32,6 +34,7 @@ public class Sudoku {
     this.textField = textField;
   }
 
+  // Sets the value of the Sudoku object with integer values
   public void setValue(int text) {
     if (text == 0) {
       this.textField.setText("");
@@ -42,15 +45,18 @@ public class Sudoku {
     this.value = Integer.toString(text);
   }
 
+  // Updates the current value of the Sudoku object with what is in the text field
   public void updateValue() {
     this.value = this.textField.getText();
   }
 
+  // Gets the value of the Sudoku object as a String
   public String getValue() {
     updateValue();
     return this.value;
   }
 
+  // Gets the value of the Sudoku object as an Integer
   public int getValueInt() {
     updateValue();
     if (this.value.equals("")) {
@@ -59,34 +65,32 @@ public class Sudoku {
     return Integer.parseInt(this.value);
   }
 
-  public String getInnerBoxIDStr() {
-    return Integer.toString(this.innerBoxID);
-  }
-
-  public String getOuterBoxIDStr() {
-    return Integer.toString(this.outerBoxID);
-  }
-
+  // Gets the ID of the inner box as an Integer
   public int getInnerBoxIDInt() {
       return this.innerBoxID;
   }
 
+  // Gets the ID of the outer box as a Integer
   public int getOuterBoxIDInt() {
       return this.outerBoxID;
   }
 
+  // Gets the colour of the current text field
   public Color getFieldColour() {
     return this.textField.getBackground();
   }
 
+  // Sets the current text field color to red invicating a duplicate value
   public void setRedField() {
     this.textField.setBackground(Color.RED);
   }
 
+  // Sets the current text field color to white invicating a non-duplicate value
   public void setWhiteField() {
     this.textField.setBackground(Color.WHITE);
   }
 
+  // Returns an array of type Sudoku which contains all the duplicates.
   public static ArrayList<Sudoku> getBoxDuplicates(ArrayList<Sudoku> outerBox, int outerBoxNumber) {
     // creates a 2D array list to store duplicates
     ArrayList<Sudoku> duplicateArray = new ArrayList<Sudoku>();
@@ -113,19 +117,20 @@ public class Sudoku {
     return duplicateArray;
   }
   
+  // Paritions Sudoku array the data into Horizontal Rows
   // chosen route -> 0 to 3, 3 to 6, 6 to 9.
   // *BOUNDS*: (OUTER-LOW, OUTER-HIGH, INNER-LOW, INNER-HIGH)
   public static ArrayList<Sudoku> getHorizontalRow(int outerLow, int outerHigh, int innerLow, int innerHigh, ArrayList<ArrayList<Sudoku>> data) {
       ArrayList<Sudoku> tempHorizontalRows = new ArrayList<Sudoku>();
-
       for (int i = outerLow; i < outerHigh; i++) {
           for (int j = innerLow; j < innerHigh; j++) {
-              tempHorizontalRows.add(data.get(i).get(j));
+            tempHorizontalRows.add(data.get(i).get(j));
           }
       }
       return tempHorizontalRows;
   }
 
+  // Paritions Sudoku array the data into Vertical Columns
   public static ArrayList<Sudoku> getVerticalColumn(int outerLow, int outerHigh, int innerLow, int innerHigh, ArrayList<ArrayList<Sudoku>> data) {
     ArrayList<Sudoku> tempVerticalColumns = new ArrayList<Sudoku>();  
     for (int i = outerLow; i <= outerHigh; i+=3) {
